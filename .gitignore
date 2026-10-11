@@ -8,11 +8,16 @@
 # sqlite & temp databases
 *.sqlite
 *.sqlite3
+*.sqlite-journal
 *.db
 database/*.sqlite
 database/*.sqlite-journal
+inventory-laravel/database/*.sqlite
+inventory-laravel/database/*.sqlite-journal
 tests/*.sqlite
+inventory-native/tests/*.sqlite
 !database/schema.sql
+!inventory-native/database/schema.sql
 
 # dependencies
 vendor/
@@ -41,18 +46,31 @@ Thumbs.db
 
 # laravel
 storage/*.key
+inventory-laravel/storage/*.key
 storage/framework/cache/*
+inventory-laravel/storage/framework/cache/*
 !storage/framework/cache/.gitignore
+!inventory-laravel/storage/framework/cache/.gitignore
 storage/framework/sessions/*
+inventory-laravel/storage/framework/sessions/*
 !storage/framework/sessions/.gitignore
+!inventory-laravel/storage/framework/sessions/.gitignore
 storage/framework/views/*
+inventory-laravel/storage/framework/views/*
 !storage/framework/views/.gitignore
+!inventory-laravel/storage/framework/views/.gitignore
 storage/logs/*
+inventory-laravel/storage/logs/*
 !storage/logs/.gitignore
+!inventory-laravel/storage/logs/.gitignore
 public/storage
+inventory-laravel/public/storage
 public/hot
+inventory-laravel/public/hot
 public/build
+inventory-laravel/public/build
 public/fonts-manifest.dev.json
+inventory-laravel/public/fonts-manifest.dev.json
 auth.json
 Homestead.json
 Homestead.yaml
