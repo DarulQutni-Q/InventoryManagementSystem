@@ -1,250 +1,124 @@
 # Inventory Management System
-**Mini Project 3 — Pemrograman Website (Laravel 12 / P5 Upgrade)**
 
-Sistem manajemen inventori modern berbasis framework **Laravel 12** untuk mata kuliah Pemrograman Website.
-Proyek ini merupakan hasil migrasi dan penyatuan penuh dari PHP Native (Pertemuan 4 / P4) ke framework Laravel resmi (Pertemuan 5 / P5) langsung di root direktori repositori.
+Mini Project 3 — Pemrograman Website (Upgrade P4 Native ke Framework Laravel 12)
 
-Fitur utamanya: catat barang masuk dan keluar, kelola master data (produk, kategori, supplier),
-lihat histori mutasi stok, dan dashboard laporan. Akses dibedakan antara Admin dan Staff.
+Repositori ini berisi sistem manajemen inventori barang gudang yang telah di-upgrade penuh dari implementasi awal P4 (PHP Native) menjadi arsitektur framework resmi **Laravel 12** langsung di root direktori repositori.
 
----
+Fokus utama sistem ini adalah menjaga konsistensi data stok barang fisik, mengeliminasi risiko selisih barang akibat *race condition* melalui transaksi database atomik, serta menerapkan pemisahan hak akses (RBAC) yang tegas antara manajemen dan tim operasional lapangan.
 
 ## Tech Stack
 
-- **Backend**: PHP 8.x (native, tanpa framework)
-- **Database**: MySQL 5.7+ (wajib InnoDB), fallback SQLite untuk development lokal
-- **Frontend**: Tailwind CSS via CDN, HTML murni tanpa build step
-- **Auth**: Session PHP + `password_hash()` bcrypt
-- **Security**: PDO Prepared Statement, CSRF token, XSS escaping via `e()`
+Stack yang digunakan sengaja dipilih agar ringan dijalankan di lokal tanpa dependensi rumit, namun tetap menerapkan standar arsitektur modern:
 
----
+- **Framework**: Laravel 12
+- **Bahasa**: PHP 8.2+
+- **Database**:
+  - **SQLite** (bawaan default `.env.example`, langsung jalan tanpa perlu instal server database tambahan)
+  - **MySQL 5.7+ / MariaDB** (menggunakan storage engine InnoDB untuk mendukung row-level locking di lingkungan produksi)
+- **ORM**: Eloquent ORM dengan relasi relasional lengkap (one-to-many, many-to-many junction)
+- **Frontend**: Blade Templates + Tailwind CSS (via CDN) dengan desain antarmuka utilitarian yang bersih, sidebar tetap (fixed), dan tata letak responsif
 
-## Fitur yang Sudah Selesai
+## Pembagian Peran Pengguna (RBAC)
 
-### Autentikasi dan RBAC
-Login dengan username dan password (bcrypt). Session di-regenerate setelah login berhasil
-untuk cegah session fixation. Ada dua role: Admin dan Staff. Admin bisa akses semua modul
-termasuk manajemen user. Staff bisa catat transaksi stok tapi tidak bisa ubah master data.
-Proteksi dilakukan di backend, bukan sekadar sembunyikan link.
+Aplikasi membedakan hak akses secara ketat di sisi backend (melalui middleware dan proteksi controller), bukan sekadar menyembunyikan navigasi di antarmuka:
 
-### Master Data
-- **Kategori**: CRUD lengkap, cek duplikat nama, proteksi hapus jika kategori masih dipakai produk
-- **Produk**: CRUD dengan relasi kategori, SKU unik, relasi many-to-many ke supplier via junction table
-- **Supplier**: CRUD, proteksi hapus jika supplier masih terhubung produk
+### 1. Administrator
+- **Dashboard Eksekutif**: Ringkasan menyeluruh kondisi gudang, termasuk metrik valuasi finansial (total nilai aset inventaris dalam Rupiah), statistik produk aktif, peringatan stok kritis, dan rasio barang masuk vs keluar.
+- **Master Data Penuh (CRUD)**: Kontrol penuh untuk membuat, memperbarui, dan menghapus data Kategori, Produk (termasuk penetapan harga beli, harga jual, dan relasi multi-supplier), serta Data Supplier.
+- **Manajemen Pengguna**: Mengelola data akun staf dan administrator di sistem.
 
-Semua listing punya search, sorting (allowlist), dan pagination 10 item per halaman.
+### 2. Operator Gudang (Staff)
+- **Dashboard Operasional Logistik**: Tampilan yang disesuaikan khusus untuk aktivitas fisik gudang tanpa menampilkan metrik valuasi uang atau harga beli barang. Memuat widget peringatan stok menipis dengan tombol aksi cepat restock (langsung membuka form barang masuk).
+- **Transaksi Barang Masuk & Keluar**: Mencatat mutasi stok harian secara real-time (penerimaan barang dari supplier atau pengeluaran barang untuk kebutuhan distribusi).
+- **Katalog Produk Mode Baca (Read-Only)**: Staf dapat mencari dan memeriksa SKU, nama barang, kategori, serta sisa stok fisik. Staf tidak memiliki akses untuk mengubah harga atau menghapus data master. Setiap upaya manipulasi langsung diblokir dengan response HTTP 403 (Forbidden).
 
-### Transaksi Stok
+## Integritas Transaksi & Pessimistic Locking
 
-Ini bagian paling kritis dari proyek. Barang masuk dan keluar masing-masing berjalan dalam
-database transaction (`BEGIN/COMMIT/ROLLBACK`) sehingga update stok dan pencatatan histori
-selalu sinkron, atau gagal bersama.
+Pencatatan mutasi stok adalah bagian paling kritis di sistem ini untuk memastikan stok fisik selalu sinkron dengan data di sistem:
 
-Untuk barang keluar, ada pessimistic locking:
-
-```sql
-SELECT stock, name FROM products WHERE id = ? FOR UPDATE
-```
-
-Row produk dikunci selama transaksi berjalan. Ini mencegah dua request bersamaan sama-sama lolos
-validasi stok lalu sama-sama mengurangi stok yang sebenarnya tidak mencukupi. Kalau stok kurang,
-sistem melempar exception, transaksi di-rollback, stok tidak berubah.
-
-### Histori Stok
-Semua mutasi tercatat di tabel `stock_movements`. Halaman histori bisa difilter berdasarkan produk,
-tipe (IN/OUT), dan rentang tanggal. Join ke tabel `users` dan `user_profiles` untuk tampilkan
-siapa yang mencatat transaksi.
-
-### Dashboard
-Empat widget: jumlah jenis produk, total nilai inventaris (stok x harga), jumlah produk stok kritis,
-dan ringkasan total unit masuk vs keluar. Ada tabel peringatan produk yang stoknya sudah di bawah
-batas minimum, plus laporan agregat per produk dengan query GROUP BY yang dicontohkan langsung
-di slide dosen.
-
-### Keamanan
-- SQL Injection: 100% Prepared Statement PDO, tidak ada query concatenation
-- XSS: semua output HTML lewat fungsi `e()` (wrapper `htmlspecialchars`)
-- CSRF: setiap form POST punya hidden token, diverifikasi dengan `hash_equals()` (timing-safe)
-- Sort injection: nama kolom ORDER BY hanya dari allowlist PHP, tidak langsung dari `$_GET`
-- Password: bcrypt via `password_hash()`, tidak ada MD5 atau plaintext
-
----
+- **Transaksi Atomik (`DB::transaction()`)**: Perubahan jumlah stok pada tabel produk dan pencatatan riwayat log di tabel mutasi (`stock_movements`) selalu dieksekusi dalam satu transaksi database tunggal. Kedua aksi harus berhasil bersamaan atau dibatalkan seluruhnya (*all-or-nothing*).
+- **Pessimistic Locking (`lockForUpdate()`)**: Pada proses pencatatan barang keluar, baris produk dikunci sementara menggunakan klausa `SELECT ... FOR UPDATE`. Mekanisme ini mencegah *race condition* jika ada dua operator yang mencatat pengeluaran barang yang sama di detik yang bersamaan.
+- **Pencegahan Stok Negatif**: Sistem selalu memvalidasi ketersediaan barang sebelum pengurangan dilakukan. Jika permintaan melebihi sisa stok, transaksi otomatis di-rollback, sistem menampilkan pesan galat yang informatif, dan saldo stok tidak akan pernah menjadi negatif.
 
 ## Akun Demo
 
-Untuk penguji atau dosen, sudah ada seed data yang bisa langsung dipakai:
+Untuk keperluan demo atau pengujian, database seeder sudah menyediakan dua akun siap pakai:
 
-| Role  | Username | Password  |
-|-------|----------|-----------|
-| Admin | `admin`  | `admin123` |
-| Staff | `staff`  | `staff123` |
+| Peran | Username | Password | Deskripsi Wewenang |
+|---|---|---|---|
+| **Administrator** | `admin` | `admin123` | Akses penuh dashboard keuangan, CRUD master data, dan user |
+| **Operator Gudang (Staff)** | `staff` | `staff123` | Dashboard logistik, transaksi masuk/keluar, katalog mode baca |
 
----
+## Cara Menjalankan Aplikasi
 
-## Instalasi
-
-### Prasyarat
-- PHP 8.0 atau lebih baru
-- MySQL 5.7+ dengan storage engine InnoDB (wajib untuk `FOR UPDATE`)
-- Ekstensi PHP: `pdo`, `pdo_mysql`, `session`
-
-Kalau pakai XAMPP, pastikan versi MySQL-nya minimal 5.7. XAMPP lama kadang masih bawa MySQL 5.5
-yang tidak support beberapa fitur yang kita pakai.
-
-### Langkah-langkah
-
-**1. Clone repo**
-```bash
-git clone https://github.com/DarulQutni-Q/InventoryManagementSystem.git
-cd InventoryManagementSystem
-```
-
-**2. Setup database**
-
-Buat database baru di MySQL:
-```sql
-CREATE DATABASE inventory_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-Import schema dan seed data:
-```bash
-mysql -u root -p inventory_db < database/schema.sql
-```
-
-Seed data sudah termasuk kategori, produk, supplier, dan 2 akun user (admin + staff).
-
-**3. Konfigurasi koneksi database**
-```bash
-cp config/database.example.php config/database.php
-```
-
-Edit `config/database.php` dan isi kredensial MySQL:
-```php
-'host'     => 'localhost',
-'dbname'   => 'inventory_db',
-'username' => 'root',
-'password' => 'password_anda',
-```
-
-Kalau tidak ada MySQL dan mau coba cepat pakai SQLite, biarkan saja
-konfigurasi default, sistem akan pakai fallback SQLite otomatis.
-Perlu dicatat: SQLite tidak support `FOR UPDATE`, jadi pessimistic locking
-tidak aktif di mode ini. Untuk ujian atau demo resmi, gunakan MySQL.
-
-**4. Jalankan server built-in PHP**
-```bash
-php -S localhost:8000 -t public/
-```
-
-Buka browser ke `http://localhost:8000`. Login dengan akun demo di atas.
-
----
-
-## Menjalankan Test
-
-Ada beberapa test script di folder `tests/`:
+Langkah instalasi lokal menggunakan SQLite (paling cepat dan praktis):
 
 ```bash
-# Test transaksi stok IN, OUT (termasuk kasus gagal + rollback), dan query dashboard
-php tests/test_stock_and_dashboard.php
+# 1. Install dependensi
+composer install
 
-# Test foundation: koneksi database, helper auth, escape, dan CSRF
-php tests/test_foundation.php
-```
+# 2. Salin template konfigurasi environment
+cp .env.example .env
 
-Kalau semua test hijau, outputnya seperti ini:
-```
-Hasil: 16 PASS, 0 FAIL
-```
-
-Kalau ada yang gagal, periksa koneksi database dulu. Test akan membuat data sementara
-dan menghapusnya lagi setelah selesai lewat `register_shutdown_function`.
-
----
-
-## Struktur Folder
-
-```
-MiniProject03/
-├── config/
-│   ├── database.php          <- koneksi PDO (jangan di-commit jika ada password)
-│   └── database.example.php  <- template konfigurasi
-├── database/
-│   └── schema.sql            <- DDL + seed data realistis
-├── helpers/
-│   ├── auth.php              <- requireLogin(), requireRole(), hasRole()
-│   ├── csrf.php              <- csrf_field(), verify_csrf(), require_csrf()
-│   ├── escape.php            <- e() wrapper htmlspecialchars
-│   └── validation.php        <- fungsi validasi input
-├── public/                   <- document root web server
-│   ├── index.php
-│   ├── login.php / logout.php
-│   ├── dashboard.php
-│   ├── categories/           <- CRUD kategori
-│   ├── suppliers/            <- CRUD supplier
-│   ├── products/             <- CRUD produk (roadmap P4 lanjutan)
-│   └── stock/
-│       ├── in.php            <- catat barang masuk
-│       ├── out.php           <- catat barang keluar (FOR UPDATE)
-│       └── history.php       <- riwayat mutasi stok
-├── tests/
-│   ├── test_foundation.php
-│   └── test_stock_and_dashboard.php
-└── views/
-    ├── layouts/
-    │   ├── header.php        <- HTML head + navbar + sidebar
-    │   ├── sidebar.php       <- navigasi sidebar responsif
-    │   └── footer.php        <- penutup HTML + script
-    ├── auth/
-    │   └── login.php         <- form login
-    └── errors/
-        ├── 403.php           <- tampilan akses ditolak
-        └── 404.php           <- tampilan halaman tidak ditemukan
-```
-
----
-
-## Catatan Teknis dan Batasan
-
-**MySQL wajib untuk fitur locking penuh.** Pessimistic locking (`SELECT FOR UPDATE`) hanya aktif
-di MySQL InnoDB. Di SQLite mode fallback, sistem tetap bekerja dan validasi stok tetap jalan,
-tapi row-level lock tidak ada. Untuk demo ke dosen, gunakan MySQL.
-
-**`config/database.php` ada di `.gitignore`** jika menyimpan password. File `.example.php`
-sudah tersedia sebagai template. Kalau mau push ke repo publik, pastikan kredensial tidak ikut.
-
-**Fitur produk (CRUD) belum lengkap.** Modul `public/products/` ada di struktur folder
-tapi implementasinya masuk roadmap P4 lanjutan. Yang sudah selesai: kategori, supplier,
-transaksi stok, histori, dan dashboard.
-
----
-
-## Fase 2 — P5: Migrasi ke Laravel Framework (Selesai)
-
-Aplikasi telah berhasil dimigrasikan dan disatukan secara resmi ke root direktori repositori menggunakan Laravel 12. Seluruh business logic, proteksi ACID, relasi relasional, dan kontrol otorisasi (RBAC) dipertahankan sepenuhnya:
-
-| Komponen P4 (Lama) | Implementasi P5 di Root (Laravel 12) |
-|---|---|
-| `config/database.php` (PDO) | `.env` SQLite / MySQL via Eloquent ORM (`config/database.php`) |
-| `views/layouts/main.php` | `resources/views/layouts/app.blade.php` (Blade + Tailwind CDN, Fixed Sidebar & Navbar) |
-| `helpers/auth.php` | Laravel Auth Guard + `EnsureUserIsAdmin` Middleware (HTTP 403 untuk staff) |
-| Skrip CRUD terpisah | Resource Controllers (`ProductController`, `CategoryController`, `SupplierController`, `StockMovementController`, `UserController`) |
-| `database/schema.sql` | Migrasi terurut chronologis + `DatabaseSeeder` dengan data realistis |
-| Transaksi Stok Manual | `DB::transaction()` + Pessimistic Locking (`lockForUpdate()`) di Eloquent |
-| Test Native | PHPUnit Feature Tests (`tests/Feature/InventoryTest.php` 18 tests, 51 assertions) |
-
-### Cara Menjalankan Laravel P5:
-```bash
-cp .env.example .env # jika belum ada
+# 3. Generate application key
 php artisan key:generate
+
+# 4. Siapkan file database SQLite
+touch database/database.sqlite
+
+# 5. Jalankan migrasi dan seeder data awal
 php artisan migrate:fresh --seed
-php artisan test
+
+# 6. Jalankan development server
 php artisan serve
 ```
-Buka browser ke `http://localhost:8000`. Login dengan akun `admin` / `admin123` atau `staff` / `staff123`.
----
 
-## Konteks Tugas
+Buka peramban di `http://localhost:8000` dan login dengan salah satu akun demo di atas.
 
-Proyek ini dibuat untuk mata kuliah Pemrograman Website, Mini Project 3 (Pertemuan 4 ke Pertemuan 5).
-Branch aktif: `feat/p5-inventory-laravel`.
+> **Catatan Penggunaan MySQL**: Jika ingin menggunakan MySQL, cukup sesuaikan variabel `DB_CONNECTION=mysql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, dan `DB_PASSWORD` pada file `.env`, lalu jalankan `php artisan migrate:fresh --seed`. Pastikan MySQL menggunakan engine InnoDB.
+
+## Menjalankan Pengujian (Testing)
+
+Semua alur bisnis utama sudah dicakup oleh automated tests berbasis PHPUnit Feature Tests di `tests/Feature/InventoryTest.php`. Pengujian mencakup:
+- Alur login, logout, dan pengalihan session
+- Otorisasi berbasis peran (admin vs staff) pada setiap endpoint
+- Operasi CRUD master data kategori, supplier, dan produk
+- Transaksi stok masuk dan stok keluar beserta pencatatan riwayatnya
+- Pengujian rollback otomatis saat stok tidak mencukupi (pencegahan stok minus)
+- Filter riwayat mutasi stok dan kalkulasi widget dashboard
+
+Jalankan perintah pengujian:
+
+```bash
+php artisan test
+```
+
+Status saat ini: **25 feature tests, 108 assertions lulus 100%**.
+
+## Struktur Direktori Utama
+
+```
+.
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/       # Controller auth, master data, stok, dan dashboard
+│   │   └── Middleware/        # Middleware otorisasi (EnsureUserIsAdmin)
+│   └── Models/                # Eloquent model (Product, Category, Supplier, StockMovement, User)
+├── database/
+│   ├── migrations/            # 7 file migrasi skema tabel
+│   └── seeders/               # Seeder data realistis dan akun demo
+├── resources/
+│   └── views/                 # Blade templates dengan layout modular dan Tailwind CSS
+│       ├── auth/              # Form login
+│       ├── categories/        # Antarmuka CRUD kategori
+│       ├── dashboard/         # Dashboard terpisah untuk admin dan staff
+│       ├── layouts/           # Template layout (navbar dan fixed sidebar)
+│       ├── products/          # Antarmuka produk (CRUD untuk admin, read-only untuk staff)
+│       ├── stock/             # Form barang masuk, barang keluar, dan log riwayat
+│       ├── suppliers/         # Antarmuka CRUD supplier
+│       └── users/             # Manajemen user (admin only)
+├── routes/
+│   └── web.php                # Rute web dan pengelompokan middleware
+└── tests/
+    └── Feature/               # 25 automated feature tests
+```
