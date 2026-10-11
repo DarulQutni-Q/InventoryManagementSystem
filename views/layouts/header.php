@@ -46,9 +46,12 @@ $current_uri  = $_SERVER['REQUEST_URI'] ?? '';
         </svg>
     </button>
 
-    <span class="text-white font-bold text-lg tracking-tight flex-1 select-none">
-        📦 Inventoria
-    </span>
+    <div class="flex items-center gap-2.5 flex-1 select-none">
+        <svg class="w-6 h-6 text-indigo-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+        </svg>
+        <span class="text-white font-bold text-lg tracking-tight">Inventoria</span>
+    </div>
 
     <!-- Identitas pengguna aktif + role badge -->
     <div class="flex items-center gap-3">
@@ -70,12 +73,13 @@ $current_uri  = $_SERVER['REQUEST_URI'] ?? '';
 </nav>
 
 <!-- wrapper: sidebar + konten -->
-<div class="flex h-full pt-14">
+<div class="flex min-h-screen bg-slate-50">
 
 <?php require_once __DIR__ . '/sidebar.php'; ?>
 
 <!-- Area konten utama — flex-1 agar mengisi sisa lebar halaman -->
-<main id="main-content" class="flex-1 overflow-y-auto p-6 lg:p-8 bg-slate-50 min-h-screen">
+<main id="main-content" class="flex-1 lg:pl-64 pt-14 min-h-screen bg-slate-50">
+    <div class="p-6 lg:p-8">
 
 <?php
 // Flash messages dibaca dan langsung dihapus dari session —

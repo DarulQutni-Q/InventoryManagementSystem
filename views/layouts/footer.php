@@ -3,6 +3,7 @@
 // lalu menulis satu blok <script> utilitas yang tipis.
 // Dipanggil terakhir di setiap halaman, setelah konten halaman selesai.
 ?>
+    </div><!-- /container pembungkus konten -->
 </main><!-- /main-content -->
 </div><!-- /flex wrapper sidebar+konten -->
 

@@ -19,10 +19,10 @@ if (!function_exists('nav_class')) {
 $is_admin = ($_SESSION['role'] ?? '') === 'admin';
 ?>
 
-<!-- Desktop: static. Mobile: slide-in dari kiri, toggle via JS di footer.php -->
+<!-- Desktop: fixed. Mobile: slide-in dari kiri, toggle via JS di footer.php -->
 <aside id="sidebar"
-       class="fixed lg:static inset-y-0 left-0 z-20 w-60 bg-slate-800 flex flex-col pt-14 lg:pt-0
-              transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out shrink-0"
+       class="fixed top-14 left-0 bottom-0 w-64 bg-slate-800 z-20 overflow-y-auto flex flex-col justify-between
+              -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out"
        aria-label="Navigasi utama">
 
     <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
@@ -42,7 +42,7 @@ $is_admin = ($_SESSION['role'] ?? '') === 'admin';
         <a href="/categories/index.php" class="<?= nav_class('/categories') ?>">
             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
             </svg>
             Kategori
         </a>
@@ -58,7 +58,7 @@ $is_admin = ($_SESSION['role'] ?? '') === 'admin';
         <a href="/suppliers/index.php" class="<?= nav_class('/suppliers') ?>">
             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h2m-9 0a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4z"/>
             </svg>
             Supplier
         </a>
@@ -68,7 +68,7 @@ $is_admin = ($_SESSION['role'] ?? '') === 'admin';
         <a href="/stock/in.php" class="<?= nav_class('/stock/in') ?>">
             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
             </svg>
             Barang Masuk
         </a>
@@ -76,7 +76,7 @@ $is_admin = ($_SESSION['role'] ?? '') === 'admin';
         <a href="/stock/out.php" class="<?= nav_class('/stock/out') ?>">
             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
             </svg>
             Barang Keluar
         </a>
@@ -84,7 +84,7 @@ $is_admin = ($_SESSION['role'] ?? '') === 'admin';
         <a href="/stock/history.php" class="<?= nav_class('/stock/history') ?>">
             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
             Riwayat Stok
         </a>
