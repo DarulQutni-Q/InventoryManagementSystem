@@ -1,8 +1,8 @@
 # Inventory Management System
-**Mini Project 3 — Pemrograman Website (PHP Native)**
+**Mini Project 3 — Pemrograman Website (Laravel 12 / P5 Upgrade)**
 
-Sistem manajemen inventori berbasis PHP native untuk mata kuliah Pemrograman Website.
-Dibangun untuk memenuhi tugas Pertemuan 4 (P4), dan akan direfactor ke Laravel di Pertemuan 5 (P5).
+Sistem manajemen inventori modern berbasis framework **Laravel 12** untuk mata kuliah Pemrograman Website.
+Proyek ini merupakan hasil migrasi dan penyatuan penuh dari PHP Native (Pertemuan 4 / P4) ke framework Laravel resmi (Pertemuan 5 / P5) langsung di root direktori repositori.
 
 Fitur utamanya: catat barang masuk dan keluar, kelola master data (produk, kategori, supplier),
 lihat histori mutasi stok, dan dashboard laporan. Akses dibedakan antara Admin dan Staff.
@@ -221,21 +221,20 @@ transaksi stok, histori, dan dashboard.
 
 ## Fase 2 — P5: Migrasi ke Laravel Framework (Selesai)
 
-Aplikasi telah berhasil dimigrasikan dan diimplementasikan secara komprehensif ke Laravel 12 di dalam direktori `inventory-laravel/`. Seluruh business logic, proteksi ACID, relasi relasional, dan kontrol otorisasi (RBAC) dipertahankan sepenuhnya:
+Aplikasi telah berhasil dimigrasikan dan disatukan secara resmi ke root direktori repositori menggunakan Laravel 12. Seluruh business logic, proteksi ACID, relasi relasional, dan kontrol otorisasi (RBAC) dipertahankan sepenuhnya:
 
-| Komponen P4 | Implementasi P5 di `inventory-laravel/` |
+| Komponen P4 (Lama) | Implementasi P5 di Root (Laravel 12) |
 |---|---|
-| `config/database.php` (PDO) | `.env` SQLite / MySQL via Eloquent ORM |
+| `config/database.php` (PDO) | `.env` SQLite / MySQL via Eloquent ORM (`config/database.php`) |
 | `views/layouts/main.php` | `resources/views/layouts/app.blade.php` (Blade + Tailwind CDN, Fixed Sidebar & Navbar) |
 | `helpers/auth.php` | Laravel Auth Guard + `EnsureUserIsAdmin` Middleware (HTTP 403 untuk staff) |
 | Skrip CRUD terpisah | Resource Controllers (`ProductController`, `CategoryController`, `SupplierController`, `StockMovementController`, `UserController`) |
-| `database/schema.sql` | 7 Migrasi terurut chronologis + `DatabaseSeeder` dengan data realistis |
+| `database/schema.sql` | Migrasi terurut chronologis + `DatabaseSeeder` dengan data realistis |
 | Transaksi Stok Manual | `DB::transaction()` + Pessimistic Locking (`lockForUpdate()`) di Eloquent |
 | Test Native | PHPUnit Feature Tests (`tests/Feature/InventoryTest.php` 18 tests, 51 assertions) |
 
 ### Cara Menjalankan Laravel P5:
 ```bash
-cd inventory-laravel
 cp .env.example .env # jika belum ada
 php artisan key:generate
 php artisan migrate:fresh --seed
@@ -247,5 +246,5 @@ Buka browser ke `http://localhost:8000`. Login dengan akun `admin` / `admin123` 
 
 ## Konteks Tugas
 
-Proyek ini dibuat untuk mata kuliah Pemrograman Website, Mini Project 3 (Pertemuan 4).
-Branch aktif: `feat/p4-inventory-native`.
+Proyek ini dibuat untuk mata kuliah Pemrograman Website, Mini Project 3 (Pertemuan 4 ke Pertemuan 5).
+Branch aktif: `feat/p5-inventory-laravel`.

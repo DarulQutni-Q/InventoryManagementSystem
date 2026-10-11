@@ -4,8 +4,6 @@
 .env.backup
 .env.production
 !.env.example
-config/database.php
-!config/database.example.php
 
 # sqlite & temp databases
 *.sqlite
@@ -14,6 +12,7 @@ config/database.php
 database/*.sqlite
 database/*.sqlite-journal
 tests/*.sqlite
+!database/schema.sql
 
 # dependencies
 vendor/
@@ -52,3 +51,10 @@ storage/logs/*
 !storage/logs/.gitignore
 public/storage
 public/hot
+public/build
+public/fonts-manifest.dev.json
+auth.json
+Homestead.json
+Homestead.yaml
+_ide_helper.php
+.phpactor.json

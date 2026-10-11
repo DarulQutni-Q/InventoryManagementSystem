@@ -1,118 +1,184 @@
 <?php
-/**
- * config/database.php
- * Koneksi PDO MySQL untuk Inventory Management System (P4 - PHP Native).
- *
- * Menerapkan standar keamanan OWASP:
- * - PDO::ERRMODE_EXCEPTION: Mencegah silent failure pada query.
- * - PDO::ATTR_DEFAULT_FETCH_MODE: Standarisasi hasil query sebagai array asosiatif.
- * - PDO::ATTR_EMULATE_PREPARES => false: Memaksa native prepared statements MySQL.
- */
 
-// Konversi DDL MySQL ke SQLite untuk mode fallback development lokal
-function convertMysqlToSqlite(string $sql): string {
-    $sql = preg_replace('/SET FOREIGN_KEY_CHECKS\s*=\s*\d+;/i', '', $sql);
-    $sql = preg_replace('/ENGINE\s*=\s*\w+[^;]*/i', '', $sql);
-    $sql = preg_replace('/INT\s+AUTO_INCREMENT\s+PRIMARY\s+KEY/i', 'INTEGER PRIMARY KEY AUTOINCREMENT', $sql);
-    $sql = preg_replace('/ENUM\s*\([^)]+\)/i', 'TEXT', $sql);
-    $sql = preg_replace('/ON\s+UPDATE\s+CURRENT_TIMESTAMP/i', '', $sql);
-    return $sql;
-}
+use Illuminate\Support\Str;
+use Pdo\Mysql;
 
-// Inisialisasi basis data SQLite saat server MySQL lokal belum aktif
-function initSqliteFallback(string $sqlitePath): PDO {
-    $dir = dirname($sqlitePath);
-    if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
-    }
+return [
 
-    $pdo = new PDO('sqlite:' . $sqlitePath, null, null, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
+    /*
+    |--------------------------------------------------------------------------
+    | Default Database Connection Name
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify which of the database connections below you wish
+    | to use as your default connection for database operations. This is
+    | the connection which will be utilized unless another connection
+    | is explicitly specified when you execute a query / statement.
+    |
+    */
 
-    // SQLite mematikan Foreign Key secara default, wajib diaktifkan per koneksi
-    $pdo->exec('PRAGMA foreign_keys = ON;');
+    'default' => env('DB_CONNECTION', 'sqlite'),
 
-    $tables = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")->fetch();
-    if (!$tables) {
-        $schemaFile = __DIR__ . '/../database/schema.sql';
-        if (file_exists($schemaFile)) {
-            $rawSql = file_get_contents($schemaFile);
-            $sqliteSql = convertMysqlToSqlite($rawSql);
-            $pdo->exec($sqliteSql);
-        }
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Database Connections
+    |--------------------------------------------------------------------------
+    |
+    | Below are all of the database connections defined for your application.
+    | An example configuration is provided for each database system which
+    | is supported by Laravel. You're free to add / remove connections.
+    |
+    */
 
-    return $pdo;
-}
+    'connections' => [
 
-// Mendapatkan instance koneksi PDO tunggal (singleton)
-function getDbConnection(bool $forceNew = false): PDO {
-    static $cachedPdo = null;
+        'sqlite' => [
+            'driver' => 'sqlite',
+            'url' => env('DB_URL'),
+            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'prefix' => '',
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+            'busy_timeout' => null,
+            'journal_mode' => null,
+            'synchronous' => null,
+            'transaction_mode' => 'DEFERRED',
+        ],
 
-    if ($cachedPdo !== null && !$forceNew) {
-        return $cachedPdo;
-    }
+        'mysql' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'laravel'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
 
-    $driver = getenv('DB_DRIVER') ?: 'mysql';
-    $host = getenv('DB_HOST') ?: '127.0.0.1';
-    $port = (int)(getenv('DB_PORT') ?: 3306);
-    $dbname = getenv('DB_NAME') ?: (getenv('DB_DATABASE') ?: 'inventory_db');
-    $user = getenv('DB_USER') ?: (getenv('DB_USERNAME') ?: 'root');
-    $pass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : (getenv('DB_PASSWORD') !== false ? getenv('DB_PASSWORD') : '');
-    $fallbackEnv = getenv('DB_FALLBACK_SQLITE');
-    $fallbackSqlite = ($fallbackEnv === false || $fallbackEnv === '') ? true : filter_var($fallbackEnv, FILTER_VALIDATE_BOOLEAN);
-    $sqlitePath = getenv('DB_SQLITE_PATH') ?: __DIR__ . '/../database/inventory.sqlite';
-    if ($driver === 'sqlite') {
-        $cachedPdo = initSqliteFallback($sqlitePath);
-        return $cachedPdo;
-    }
+        'mariadb' => [
+            'driver' => 'mariadb',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'laravel'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
 
-    $dsn = "mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4";
-    $options = [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ];
+        'pgsql' => [
+            'driver' => 'pgsql',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => env('DB_DATABASE', 'laravel'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
+        ],
 
-    try {
-        $cachedPdo = new PDO($dsn, $user, $pass, $options);
-        return $cachedPdo;
-    } catch (PDOException $e) {
-        // Fallback cerdas ke SQLite agar developer tidak terhenti saat MySQL lokal mati
-        if ($fallbackSqlite) {
-            $cachedPdo = initSqliteFallback($sqlitePath);
-            return $cachedPdo;
-        }
+        'sqlsrv' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '1433'),
+            'database' => env('DB_DATABASE', 'laravel'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
+            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
 
-        // Jika fallback dinonaktifkan, lempar exception diagnostik yang jelas
-        throw new PDOException(
-            "Gagal menghubungkan ke MySQL ({$host}:{$port}/{$dbname}): " . $e->getMessage() .
-            ". Pastikan layanan MySQL berjalan atau aktifkan DB_FALLBACK_SQLITE=true untuk pengujian lokal."
-        );
-    }
-}
+    ],
 
-// Helper diagnostik untuk memeriksa kesehatan koneksi basis data
-function checkDatabaseConnection(): array {
-    try {
-        $pdo = getDbConnection();
-        $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
-        return [
-            'connected' => true,
-            'driver' => $driver,
-            'message' => 'Koneksi basis data aktif menggunakan driver ' . $driver,
-        ];
-    } catch (Throwable $e) {
-        return [
-            'connected' => false,
-            'driver' => 'none',
-            'message' => $e->getMessage(),
-        ];
-    }
-}
+    /*
+    |--------------------------------------------------------------------------
+    | Migration Repository Table
+    |--------------------------------------------------------------------------
+    |
+    | This table keeps track of all the migrations that have already run for
+    | your application. Using this information, we can determine which of
+    | the migrations on disk haven't actually been run on the database.
+    |
+    */
 
-// Inisialisasi variabel global $pdo untuk kemudahan include di controller/view native
-$pdo = getDbConnection();
+    'migrations' => [
+        'table' => 'migrations',
+        'update_date_on_publish' => true,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Redis Databases
+    |--------------------------------------------------------------------------
+    |
+    | Redis is an open source, fast, and advanced key-value store that also
+    | provides a richer body of commands than a typical key-value system
+    | such as Memcached. You may define your connection settings here.
+    |
+    */
+
+    'redis' => [
+
+        'client' => env('REDIS_CLIENT', 'phpredis'),
+
+        'options' => [
+            'cluster' => env('REDIS_CLUSTER', 'redis'),
+            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-database-'),
+            'persistent' => env('REDIS_PERSISTENT', false),
+        ],
+
+        'default' => [
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'username' => env('REDIS_USERNAME'),
+            'password' => env('REDIS_PASSWORD'),
+            'port' => env('REDIS_PORT', '6379'),
+            'database' => env('REDIS_DB', '0'),
+            'max_retries' => env('REDIS_MAX_RETRIES', 3),
+            'backoff_algorithm' => env('REDIS_BACKOFF_ALGORITHM', 'decorrelated_jitter'),
+            'backoff_base' => env('REDIS_BACKOFF_BASE', 100),
+            'backoff_cap' => env('REDIS_BACKOFF_CAP', 1000),
+        ],
+
+        'cache' => [
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'username' => env('REDIS_USERNAME'),
+            'password' => env('REDIS_PASSWORD'),
+            'port' => env('REDIS_PORT', '6379'),
+            'database' => env('REDIS_CACHE_DB', '1'),
+            'max_retries' => env('REDIS_MAX_RETRIES', 3),
+            'backoff_algorithm' => env('REDIS_BACKOFF_ALGORITHM', 'decorrelated_jitter'),
+            'backoff_base' => env('REDIS_BACKOFF_BASE', 100),
+            'backoff_cap' => env('REDIS_BACKOFF_CAP', 1000),
+        ],
+
+    ],
+
+];
