@@ -1,1 +1,3 @@
 PRD.md
+database/*.sqlite
+.env
