@@ -1,80 +1,169 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-[#F8FAFC]">
+<html lang="id" class="h-full bg-[#F5F6F1]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Inventoria' }} — Sistem Manajemen Inventaris & Logistik</title>
 
-    <!-- Google Fonts: Geist, Geist Mono, JetBrains Mono, Plus Jakarta Sans -->
+    <!-- Google Fonts: Plus Jakarta Sans, Geist, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN & Design System Config -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Geist"', '"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-                        mono: ['"Geist Mono"', '"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+                        sans: ['Plus Jakarta Sans', 'Geist', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Geist Mono', 'ui-monospace', 'monospace'],
                     },
                     colors: {
-                        obsidian: '#0f172a',
-                        surface: '#ffffff',
-                        brand: {
-                            DEFAULT: '#4F46E5',
-                            hover: '#4338CA',
-                        }
+                        canvas: '#F5F6F1',
+                        cream: '#EEF0E9',
+                        'cream-light': '#F7F8F4',
+                        'cream-active': '#ECEEE8',
+                        charcoal: '#1C1D1F',
+                        pitch: '#18181B',
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Linear / Vercel Typography & Tabular Numerals */
         body {
-            font-feature-settings: "cv02", "cv03", "cv04", "cv11", "liga";
-            letter-spacing: -0.011em;
+            font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+            letter-spacing: -0.012em;
         }
         .font-mono {
             font-feature-settings: "tnum" 1, "zero" 1;
             font-variant-numeric: tabular-nums;
-            letter-spacing: -0.015em;
+            letter-spacing: -0.02em;
         }
     </style>
 </head>
-<body class="h-full bg-[#F8FAFC] text-slate-900 antialiased font-sans flex flex-col">
+<body class="h-full bg-[#F5F6F1] text-stone-800 antialiased font-sans flex">
 
-    <!-- Fixed Top Navbar (h-14) — Stripe & Cal.com Minimalist Clean -->
-    <header class="fixed top-0 left-0 right-0 h-14 bg-white border-b border-slate-200/80 z-30 flex items-center justify-between px-4 sm:px-6">
-        <div class="flex items-center gap-3.5">
-            <!-- Mobile Sidebar Toggle -->
-            <button type="button" onclick="toggleSidebar()" class="lg:hidden p-1.5 text-slate-600 hover:text-slate-900 rounded-md hover:bg-slate-100 transition-colors focus:outline-none" aria-label="Buka Menu Navigasi">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-            </button>
-
-            <!-- Brand Logo with Precise Geometric Mark -->
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 group">
-                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white ring-1 ring-indigo-500/20 group-hover:bg-indigo-700 transition-colors shadow-sm">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+    <!-- Fixed Left Sidebar (Pure White #FFFFFF, Hairline Separator) -->
+    <aside id="appSidebar" class="fixed inset-y-0 left-0 w-64 bg-white border-r border-black/[0.06] z-30 flex flex-col justify-between transition-transform duration-200 -translate-x-full lg:translate-x-0">
+        
+        <!-- Top Section: Brand & Navigations -->
+        <div class="flex flex-col flex-1 overflow-y-auto px-5 py-6 space-y-7">
+            
+            <!-- Brand Logo (Modern Bold Typography, No Emoji) -->
+            <div class="flex items-center justify-between">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 group">
+                    <div class="w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center font-bold text-sm tracking-tighter">
+                        IV
+                    </div>
+                    <div>
+                        <span class="text-base font-extrabold text-stone-900 tracking-tight block leading-tight group-hover:text-black transition-colors">Inventoria</span>
+                        <span class="text-[10px] font-mono font-medium text-stone-400 uppercase tracking-wider block">Enterprise Hub</span>
+                    </div>
+                </a>
+                <button type="button" onclick="toggleSidebar()" class="lg:hidden p-1.5 text-stone-400 hover:text-stone-700 rounded-lg hover:bg-stone-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
+                </button>
+            </div>
+
+            <!-- Navigasi Utama -->
+            <div>
+                <nav class="space-y-1">
+                    <!-- Dashboard -->
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl transition-all {{ request()->routeIs('dashboard') ? 'bg-[#ECEEE8] text-stone-900 font-semibold' : 'text-stone-600 hover:text-stone-900 hover:bg-[#F5F6F1]' }}">
+                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('dashboard') ? 'text-stone-900' : 'text-stone-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <!-- Aktivitas Mutasi -->
+                    <a href="{{ route('stock.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl transition-all {{ request()->routeIs('stock.index') ? 'bg-[#ECEEE8] text-stone-900 font-semibold' : 'text-stone-600 hover:text-stone-900 hover:bg-[#F5F6F1]' }}">
+                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('stock.index') ? 'text-stone-900' : 'text-stone-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                        </svg>
+                        <span>Aktivitas Mutasi</span>
+                    </a>
+
+                    <!-- Katalog Produk -->
+                    <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl transition-all {{ request()->routeIs('products.*') ? 'bg-[#ECEEE8] text-stone-900 font-semibold' : 'text-stone-600 hover:text-stone-900 hover:bg-[#F5F6F1]' }}">
+                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('products.*') ? 'text-stone-900' : 'text-stone-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                        <span>Katalog Produk</span>
+                    </a>
+
+                    <!-- Kategori -->
+                    <a href="{{ route('categories.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl transition-all {{ request()->routeIs('categories.*') ? 'bg-[#ECEEE8] text-stone-900 font-semibold' : 'text-stone-600 hover:text-stone-900 hover:bg-[#F5F6F1]' }}">
+                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('categories.*') ? 'text-stone-900' : 'text-stone-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                        </svg>
+                        <span>Kategori</span>
+                    </a>
+
+                    <!-- Supplier -->
+                    <a href="{{ route('suppliers.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl transition-all {{ request()->routeIs('suppliers.*') ? 'bg-[#ECEEE8] text-stone-900 font-semibold' : 'text-stone-600 hover:text-stone-900 hover:bg-[#F5F6F1]' }}">
+                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('suppliers.*') ? 'text-stone-900' : 'text-stone-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                        <span>Supplier</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Bagian Kedua: Operasional Gudang -->
+            <div>
+                <div class="text-[11px] font-mono font-medium text-stone-400 uppercase tracking-wider px-3.5 mb-2">Operasional Gudang</div>
+                <nav class="space-y-1">
+                    <!-- Barang Masuk -->
+                    <a href="{{ route('stock.create') }}" class="flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl transition-all {{ request()->routeIs('stock.create') ? 'bg-[#ECEEE8] text-stone-900 font-semibold' : 'text-stone-600 hover:text-stone-900 hover:bg-[#F5F6F1]' }}">
+                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('stock.create') ? 'text-stone-900' : 'text-stone-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        <span>Barang Masuk (IN)</span>
+                    </a>
+
+                    <!-- Barang Keluar -->
+                    <a href="{{ route('stock.createOut') }}" class="flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl transition-all {{ request()->routeIs('stock.createOut') ? 'bg-[#ECEEE8] text-stone-900 font-semibold' : 'text-stone-600 hover:text-stone-900 hover:bg-[#F5F6F1]' }}">
+                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('stock.createOut') ? 'text-stone-900' : 'text-stone-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                        </svg>
+                        <span>Barang Keluar (OUT)</span>
+                    </a>
+
+                    <!-- Riwayat -->
+                    <a href="{{ route('stock.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl transition-all {{ request()->routeIs('stock.index') && !request()->routeIs('stock.create*') ? 'bg-[#ECEEE8] text-stone-900 font-semibold' : 'text-stone-600 hover:text-stone-900 hover:bg-[#F5F6F1]' }}">
+                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('stock.index') ? 'text-stone-900' : 'text-stone-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Riwayat Mutasi</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Kontrol Administrator (Jika Admin) -->
+            @if(Auth::check() && Auth::user()->isAdmin())
+                <div>
+                    <div class="text-[11px] font-mono font-medium text-stone-400 uppercase tracking-wider px-3.5 mb-2">Manajemen Sistem</div>
+                    <nav class="space-y-1">
+                        <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl transition-all {{ request()->routeIs('users.*') ? 'bg-[#ECEEE8] text-stone-900 font-semibold' : 'text-stone-600 hover:text-stone-900 hover:bg-[#F5F6F1]' }}">
+                            <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('users.*') ? 'text-stone-900' : 'text-stone-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                            <span>Kelola Pengguna</span>
+                        </a>
+                    </nav>
                 </div>
-                <div class="flex items-center gap-2">
-                    <span class="font-semibold text-sm tracking-tight text-slate-900">Inventoria</span>
-                    <span class="text-[10px] font-mono font-medium px-1.5 py-0.5 text-slate-500 bg-slate-100 border border-slate-200/80 rounded">P5 Enterprise</span>
-                </div>
-            </a>
+            @endif
+
         </div>
 
-        <!-- Top Right: Active User Profile & Quick Actions -->
+        <!-- Bagian Bawah: Pengguna Sistem (Profile Widget & Logout) -->
         @auth
             @php
                 $fullName = Auth::user()->profile->full_name ?? Auth::user()->name ?? Auth::user()->username;
@@ -84,126 +173,101 @@
                     : strtoupper(substr($fullName, 0, 2));
                 $isAdmin = Auth::user()->isAdmin();
             @endphp
-            <div class="flex items-center gap-3">
-                <!-- User Profile Widget (Stripe / GitHub Style) -->
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold text-xs flex items-center justify-center flex-shrink-0" title="{{ $fullName }}">
-                        {{ $initials }}
-                    </div>
-                    <div class="hidden sm:flex flex-col text-left">
-                        <span class="text-sm font-semibold text-slate-800 leading-tight max-w-[140px] sm:max-w-xs truncate">{{ $fullName }}</span>
-                        <div class="mt-0.5">
-                            <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200/60 inline-block leading-none">
-                                {{ $isAdmin ? 'Admin' : 'Staff Gudang' }}
-                            </span>
+            <div class="p-4 border-t border-black/[0.06] bg-stone-50/50">
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-8 h-8 rounded-full bg-[#18181B] text-white flex items-center justify-center font-bold text-xs flex-shrink-0 tracking-tight">
+                            {{ $initials }}
+                        </div>
+                        <div class="min-w-0">
+                            <div class="text-xs font-semibold text-stone-900 truncate leading-tight">{{ $fullName }}</div>
+                            <div class="flex items-center gap-1.5 mt-0.5">
+                                <span class="inline-block text-[10px] font-mono font-medium px-1.5 py-0.2 rounded {{ $isAdmin ? 'bg-stone-200 text-stone-800' : 'bg-emerald-100 text-emerald-800' }}">
+                                    {{ $isAdmin ? 'Admin' : 'Staff' }}
+                                </span>
+                            </div>
                         </div>
                     </div>
+                    <form action="{{ route('logout') }}" method="POST" class="flex-shrink-0">
+                        @csrf
+                        <button type="submit" title="Keluar dari Sistem" class="p-2 text-stone-400 hover:text-stone-900 hover:bg-stone-200/60 rounded-xl transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                        </button>
+                    </form>
                 </div>
-
-                <!-- Logout Form Button -->
-                <form action="{{ route('logout') }}" method="POST" class="inline ml-1">
-                    @csrf
-                    <button type="submit" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-slate-500 hover:text-rose-600 rounded-lg hover:bg-rose-50 border border-transparent hover:border-rose-100 transition-all focus:outline-none" title="Keluar dari Sistem">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px; min-width: 16px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                        </svg>
-                        <span class="hidden md:inline">Keluar</span>
-                    </button>
-                </form>
             </div>
         @endauth
-    </header>
 
-    <!-- Fixed Sidebar (Fixed position from top-14 to bottom-0, w-64, Deep Slate Navy #0F172A) -->
-    <aside id="appSidebar" class="fixed top-14 left-0 bottom-0 w-64 bg-[#0F172A] border-r border-slate-800/80 z-20 overflow-y-auto flex flex-col justify-between transition-transform duration-200 -translate-x-full lg:translate-x-0">
-        <div class="p-4 space-y-6">
-            <!-- Navigation Section: Master & Ringkasan -->
-            <div>
-                <div class="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-wider px-3 mb-2">Navigasi Utama</div>
-                <nav class="space-y-1">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-all {{ request()->routeIs('dashboard') ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('dashboard') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                        </svg>
-                        <span>Dashboard</span>
-                    </a>
-
-                    <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-all {{ request()->routeIs('products.*') ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('products.*') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                        </svg>
-                        <span>Katalog Produk</span>
-                    </a>
-
-                    <a href="{{ route('categories.index') }}" class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-all {{ request()->routeIs('categories.*') ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('categories.*') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                        </svg>
-                        <span>Kategori Barang</span>
-                    </a>
-
-                    <a href="{{ route('suppliers.index') }}" class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-all {{ request()->routeIs('suppliers.*') ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('suppliers.*') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
-                        <span>Mitra Supplier</span>
-                    </a>
-                </nav>
-            </div>
-
-            <!-- Navigation Section: Transaksi Mutasi Logistik -->
-            <div>
-                <div class="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-wider px-3 mb-2">Operasional Gudang</div>
-                <nav class="space-y-1">
-                    <a href="{{ route('stock.create') }}" class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-all {{ request()->routeIs('stock.create') ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('stock.create') ? 'text-white' : 'text-emerald-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                        <span>Barang Masuk (IN)</span>
-                    </a>
-
-                    <a href="{{ route('stock.createOut') }}" class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-all {{ request()->routeIs('stock.createOut') ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('stock.createOut') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
-                        </svg>
-                        <span>Barang Keluar (OUT)</span>
-                    </a>
-
-                    <a href="{{ route('stock.index') }}" class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-all {{ request()->routeIs('stock.index') ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                        <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('stock.index') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
-                        </svg>
-                        <span>Riwayat Mutasi</span>
-                    </a>
-                </nav>
-            </div>
-
-            <!-- Navigation Section: Kontrol Akses (Khusus Admin) -->
-            @if(Auth::check() && Auth::user()->isAdmin())
-                <div>
-                    <div class="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-wider px-3 mb-2">Manajemen Sistem</div>
-                    <nav class="space-y-1">
-                        <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-all {{ request()->routeIs('users.*') ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                            <svg class="w-4 h-4 flex-shrink-0 {{ request()->routeIs('users.*') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                            </svg>
-                            <span>Kelola Pengguna</span>
-                        </a>
-                    </nav>
-                </div>
-            @endif
-        </div>
     </aside>
+
     <!-- Mobile Drawer Backdrop -->
-    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 z-10 hidden lg:hidden"></div>
+    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-stone-900/40 backdrop-blur-xs z-20 hidden lg:hidden"></div>
 
-    <!-- Main Content Canvas (lg:pl-64 offset from fixed sidebar, pt-14 offset from fixed header) -->
-    <main class="lg:pl-64 pt-14 min-h-screen flex flex-col flex-1 bg-[#F8FAFC]">
-        <div class="p-6 sm:p-8 lg:p-10 max-w-7xl w-full mx-auto flex-1 space-y-6">
+    <!-- Main Application Wrapper (Canvas Seamless #F5F6F1) -->
+    <div class="lg:pl-64 flex-1 flex flex-col min-h-screen bg-[#F5F6F1]">
+        
+        <!-- Top Header (Seamlessly Integrated with Canvas #F5F6F1) -->
+        <header class="sticky top-0 z-20 bg-[#F5F6F1]/90 backdrop-blur-md px-6 sm:px-8 lg:px-10 py-4 flex items-center justify-between gap-4 border-b border-black/[0.04]">
+            
+            <!-- Left: Mobile Menu Toggle & Search Bar -->
+            <div class="flex items-center gap-3.5 flex-1 max-w-lg">
+                <button type="button" onclick="toggleSidebar()" class="lg:hidden p-2 rounded-xl bg-white border border-black/[0.06] text-stone-600 hover:text-stone-900">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
 
-            <!-- Flash Alert Messages (Hairline, Clean, Non-Slop) -->
+                <!-- Search Input Form -->
+                <form action="{{ route('products.index') }}" method="GET" class="relative w-full">
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Search produk, SKU, kategori..."
+                        class="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-black/[0.06] text-xs sm:text-sm text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-black/20 focus:border-stone-400 shadow-2xs transition-all">
+                    <svg class="w-4 h-4 text-stone-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </form>
+            </div>
+
+            <!-- Right Controls: Filter/Sort Indicators & Action Pills -->
+            <div class="flex items-center gap-2.5">
+                
+                <!-- Quick Info Pill 'Me' -->
+                @auth
+                    <div class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black/[0.06] text-xs font-medium text-stone-700 shadow-2xs">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span>{{ Auth::user()->role === 'admin' ? 'Administrator' : 'Staff Operasional' }}</span>
+                    </div>
+                @endauth
+
+                <!-- Action Button: + Catat Masuk (Pill Hitam #18181B) -->
+                <a href="{{ route('stock.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#18181B] hover:bg-black text-white text-xs sm:text-sm font-semibold transition-all shadow-xs">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    <span>Catat Masuk</span>
+                </a>
+
+                @if(Auth::check() && Auth::user()->isAdmin())
+                    <!-- Action Button: + Tambah Produk (Pill Cream #EEF0E9 / Charcoal) -->
+                    <a href="{{ route('products.create') }}" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#EEF0E9] hover:bg-[#E2E5DC] text-stone-900 text-xs sm:text-sm font-semibold transition-all border border-black/[0.05]">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        <span>Tambah Produk</span>
+                    </a>
+                @endif
+            </div>
+
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 px-6 sm:px-8 lg:px-10 py-6 sm:py-8 space-y-6 max-w-7xl w-full mx-auto">
+            
+            <!-- Flash Alert Messages -->
             @if(session('success'))
-                <div class="p-3.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 text-xs sm:text-sm flex items-start gap-3">
+                <div class="p-4 rounded-2xl bg-white border border-emerald-500/20 text-emerald-950 text-xs sm:text-sm flex items-start gap-3 shadow-2xs">
                     <svg class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
@@ -212,7 +276,7 @@
             @endif
 
             @if(session('error'))
-                <div class="p-3.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-900 text-xs sm:text-sm flex items-start gap-3">
+                <div class="p-4 rounded-2xl bg-white border border-rose-500/20 text-rose-950 text-xs sm:text-sm flex items-start gap-3 shadow-2xs">
                     <svg class="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
@@ -221,8 +285,8 @@
             @endif
 
             @if(session('info'))
-                <div class="p-3.5 rounded-lg bg-slate-100 border border-slate-200/80 text-slate-800 text-xs sm:text-sm flex items-start gap-3">
-                    <svg class="w-4 h-4 text-zinc-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-4 rounded-2xl bg-white border border-stone-200 text-stone-800 text-xs sm:text-sm flex items-start gap-3 shadow-2xs">
+                    <svg class="w-4 h-4 text-stone-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <div class="font-medium leading-relaxed">{{ session('info') }}</div>
@@ -230,7 +294,7 @@
             @endif
 
             @if($errors->any())
-                <div class="p-4 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-900 text-xs sm:text-sm">
+                <div class="p-4 rounded-2xl bg-white border border-rose-500/20 text-rose-950 text-xs sm:text-sm shadow-2xs">
                     <div class="font-semibold text-xs uppercase tracking-wider mb-2 flex items-center gap-2 text-rose-800 font-mono">
                         <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
@@ -245,16 +309,17 @@
                 </div>
             @endif
 
-            <!-- Main Page Section Slot -->
+            <!-- Main Page Slot / Content -->
             {{ $slot ?? '' }}
             @yield('content')
-        </div>
+        </main>
 
-        <!-- System Footer -->
-        <footer class="border-t border-slate-200/80 bg-white py-4 px-6 text-center text-xs text-slate-400 font-mono mt-auto">
-            <span>Inventoria P5 Enterprise &middot; Praktikum Pemrograman Web &middot; {{ date('Y') }}</span>
+        <!-- Minimalist System Footer -->
+        <footer class="border-t border-black/[0.04] bg-[#F5F6F1] py-4 px-6 sm:px-8 text-center text-xs text-stone-400 font-mono mt-auto">
+            <span>Inventoria &middot; Enterprise Logistics Management System &middot; {{ date('Y') }}</span>
         </footer>
-    </main>
+
+    </div>
 
     <script>
         function toggleSidebar() {

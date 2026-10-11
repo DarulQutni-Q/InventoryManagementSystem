@@ -49,12 +49,24 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        $stockHealthPercent = $totalProducts > 0
+            ? max(0, min(100, (int) round((($totalProducts - $lowStockCount) / $totalProducts) * 100)))
+            : 100;
+
+        $safeProducts = Product::with('category')
+            ->whereColumn('stock', '>', 'minimum_stock')
+            ->orderBy('stock', 'desc')
+            ->limit(8)
+            ->get();
+
         $data = [
             'totalProducts' => $totalProducts,
             'lowStockCount' => $lowStockCount,
+            'stockHealthPercent' => $stockHealthPercent,
             'totalStockIn' => $totalStockIn,
             'totalStockOut' => $totalStockOut,
             'criticalProducts' => $criticalProducts,
+            'safeProducts' => $safeProducts,
             'recentMovements' => $recentMovements,
             'movementAggregates' => $movementAggregates,
         ];
