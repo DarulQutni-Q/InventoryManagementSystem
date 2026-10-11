@@ -40,8 +40,7 @@ class AuthController extends Controller
             // Regenerasi ID sesi pasca autentikasi sukses untuk mitigasi serangan session fixation
             $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard'))
-                ->with('success', 'Selamat datang kembali, ' . (Auth::user()->profile->full_name ?? Auth::user()->name ?? Auth::user()->username) . '!');
+            return redirect()->intended(route('dashboard'));
         }
 
         return back()

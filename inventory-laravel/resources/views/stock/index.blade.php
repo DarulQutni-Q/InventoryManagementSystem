@@ -4,25 +4,27 @@
 <div class="space-y-6">
 
     <!-- Header Page & Action Buttons -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200/80">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-zinc-200/80">
         <div>
-            <div class="text-[11px] font-mono font-semibold text-slate-400 uppercase tracking-widest mb-1">
-                Buku Besar Logistik
-            </div>
-            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Riwayat Mutasi Stok</h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Buku besar audit seluruh pergerakan barang masuk dan keluar gudang.</p>
+            <nav class="flex items-center gap-1.5 text-xs text-zinc-400 font-mono mb-1.5">
+                <span>Logistik</span>
+                <span class="text-zinc-300">/</span>
+                <span class="text-zinc-700 font-medium">Mutasi Stok</span>
+            </nav>
+            <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">Riwayat Mutasi Stok</h1>
+            <p class="text-xs sm:text-sm text-zinc-500 mt-0.5">Buku besar audit seluruh pergerakan barang masuk dan keluar gudang.</p>
         </div>
 
         <div class="flex items-center gap-2.5">
-            <a href="{{ route('stock.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm">
+            <a href="{{ route('stock.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 <span>Barang Masuk (IN)</span>
             </a>
-            <a href="{{ route('stock.createOut') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-900 text-white text-xs sm:text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm">
+            <a href="{{ route('stock.createOut') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 12H4"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
                 </svg>
                 <span>Barang Keluar (OUT)</span>
             </a>

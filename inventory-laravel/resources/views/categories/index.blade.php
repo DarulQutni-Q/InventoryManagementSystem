@@ -4,25 +4,27 @@
 <div class="space-y-6">
 
     <!-- Header Page -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200/80">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-zinc-200/80">
         <div>
-            <div class="text-[11px] font-mono font-semibold text-slate-400 uppercase tracking-widest mb-1">
-                Master Data Gudang
-            </div>
-            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Kategori Inventaris</h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Klasifikasi dan segmentasi pengelompokan produk barang.</p>
+            <nav class="flex items-center gap-1.5 text-xs text-zinc-400 font-mono mb-1.5">
+                <span>Master Data</span>
+                <span class="text-zinc-300">/</span>
+                <span class="text-zinc-700 font-medium">Kategori</span>
+            </nav>
+            <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">Kategori Inventaris</h1>
+            <p class="text-xs sm:text-sm text-zinc-500 mt-0.5">Klasifikasi dan segmentasi pengelompokan produk barang.</p>
         </div>
 
         @if(Auth::user()->isAdmin())
-            <a href="{{ route('categories.create') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm self-start sm:self-auto">
+            <a href="{{ route('categories.create') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs sm:text-sm font-medium transition-all shadow-sm self-start sm:self-auto">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 <span>Tambah Kategori</span>
             </a>
         @else
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200/80 text-slate-600 text-xs font-mono self-start sm:self-auto">
-                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-100 border border-zinc-200/80 text-zinc-600 text-xs font-mono self-start sm:self-auto">
+                <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                 </svg>
                 <span>Katalog (Mode Baca)</span>

@@ -4,15 +4,17 @@
 <div class="max-w-xl mx-auto space-y-6">
 
     <!-- Header Page -->
-    <div class="flex items-center justify-between pb-4 border-b border-slate-200/80">
+    <div class="flex items-center justify-between pb-4 border-b border-zinc-200/80">
         <div>
-            <div class="text-[11px] font-mono font-semibold text-slate-400 uppercase tracking-widest mb-1">
-                Operasional Gudang
-            </div>
-            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Pencatatan Barang Keluar (OUT)</h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Pengurangan saldo persediaan untuk pengiriman atau penggunaan internal.</p>
+            <nav class="flex items-center gap-1.5 text-xs text-zinc-400 font-mono mb-1.5">
+                <span>Logistik</span>
+                <span class="text-zinc-300">/</span>
+                <span class="text-zinc-700 font-medium">Barang Keluar</span>
+            </nav>
+            <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">Pencatatan Barang Keluar (OUT)</h1>
+            <p class="text-xs sm:text-sm text-zinc-500 mt-0.5">Pengurangan saldo persediaan untuk pengiriman atau penggunaan internal.</p>
         </div>
-        <a href="{{ route('stock.index') }}" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold transition-colors">
+        <a href="{{ route('stock.index') }}" class="px-3.5 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs sm:text-sm font-medium transition-colors">
             &larr; Riwayat Mutasi
         </a>
     </div>
@@ -91,11 +93,11 @@
         </div>
 
         <!-- Tombol Aksi -->
-        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-            <a href="{{ route('stock.index') }}" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold transition-colors">
+        <div class="pt-4 border-t border-zinc-100 flex items-center justify-end gap-3">
+            <a href="{{ route('stock.index') }}" class="px-4 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs sm:text-sm font-medium transition-colors">
                 Batal
             </a>
-            <button type="submit" id="submitBtn" class="px-5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm">
+            <button type="submit" id="submitBtn" class="px-5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
                 Catat Barang Keluar
             </button>
         </div>
