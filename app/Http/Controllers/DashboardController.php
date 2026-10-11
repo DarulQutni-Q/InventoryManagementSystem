@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\StockMovement;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        // 4 Metrik Statistik Utama
+        $user = $request->user();
+
+        // Metrik Operasional Gudang (tersedia untuk Staff & Admin)
         $totalProducts = Product::count();
-        $totalAssetValue = Product::selectRaw('COALESCE(SUM(stock * price), 0) as total')->value('total') ?? 0;
         $lowStockCount = Product::lowStock()->count();
-        
-        $totalStockIn = StockMovement::where('type', 'IN')->sum('quantity');
-        $totalStockOut = StockMovement::where('type', 'OUT')->sum('quantity');
+        $totalStockIn = (int) StockMovement::where('type', 'IN')->sum('quantity');
+        $totalStockOut = (int) StockMovement::where('type', 'OUT')->sum('quantity');
 
         // Daftar produk yang menyentuh batas minimum stok
         $criticalProducts = Product::with('category')
@@ -46,15 +49,35 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        return view('dashboard', compact(
-            'totalProducts',
-            'totalAssetValue',
-            'lowStockCount',
-            'totalStockIn',
-            'totalStockOut',
-            'criticalProducts',
-            'recentMovements',
-            'movementAggregates'
-        ));
+        $data = [
+            'totalProducts' => $totalProducts,
+            'lowStockCount' => $lowStockCount,
+            'totalStockIn' => $totalStockIn,
+            'totalStockOut' => $totalStockOut,
+            'criticalProducts' => $criticalProducts,
+            'recentMovements' => $recentMovements,
+            'movementAggregates' => $movementAggregates,
+        ];
+
+        // Metrik Eksekutif Finansial & Manajerial (HANYA untuk Administrator)
+        if ($user && $user->isAdmin()) {
+            $totalAssetValue = (float) (Product::selectRaw('COALESCE(SUM(stock * price), 0) as total')->value('total') ?? 0);
+            $data['total_value'] = $totalAssetValue;
+            $data['totalAssetValue'] = $totalAssetValue;
+            $data['activeUsersCount'] = User::count();
+            $data['categoryValuations'] = Category::query()
+                ->leftJoin('products', 'categories.id', '=', 'products.category_id')
+                ->select(
+                    'categories.id',
+                    'categories.name',
+                    DB::raw('COUNT(products.id) as products_count'),
+                    DB::raw('COALESCE(SUM(products.stock * products.price), 0) as total_value')
+                )
+                ->groupBy('categories.id', 'categories.name')
+                ->orderByDesc('total_value')
+                ->get();
+        }
+
+        return view('dashboard', $data);
     }
 }

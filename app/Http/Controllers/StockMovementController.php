@@ -41,18 +41,20 @@ class StockMovementController extends Controller
         return view('stock.index', compact('movements', 'products'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
         $products = Product::orderBy('name')->get();
+        $selectedProductId = $request->query('product_id');
 
-        return view('stock.in', compact('products'));
+        return view('stock.in', compact('products', 'selectedProductId'));
     }
 
-    public function createOut(): View
+    public function createOut(Request $request): View
     {
         $products = Product::where('stock', '>', 0)->orderBy('name')->get();
+        $selectedProductId = $request->query('product_id');
 
-        return view('stock.out', compact('products'));
+        return view('stock.out', compact('products', 'selectedProductId'));
     }
 
     public function store(Request $request): RedirectResponse

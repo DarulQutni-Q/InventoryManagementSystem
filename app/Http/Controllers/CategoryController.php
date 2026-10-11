@@ -81,10 +81,4 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
     }
 
-    private function authorizeAdmin(): void
-    {
-        if (! request()->user()?->isAdmin()) {
-            abort(403, 'Akses ditolak. Fitur ini hanya untuk Administrator.');
-        }
-    }
 }

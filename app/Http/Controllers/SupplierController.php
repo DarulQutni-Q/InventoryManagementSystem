@@ -77,10 +77,4 @@ class SupplierController extends Controller
         return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil dihapus.');
     }
 
-    private function authorizeAdmin(): void
-    {
-        if (! request()->user()?->isAdmin()) {
-            abort(403, 'Akses ditolak. Fitur ini hanya untuk Administrator.');
-        }
-    }
 }

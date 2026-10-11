@@ -137,10 +137,4 @@ class ProductController extends Controller
         $product->suppliers()->sync($syncData);
     }
 
-    private function authorizeAdmin(): void
-    {
-        if (! request()->user()?->isAdmin()) {
-            abort(403, 'Akses ditolak. Fitur ini hanya untuk Administrator.');
-        }
-    }
 }
