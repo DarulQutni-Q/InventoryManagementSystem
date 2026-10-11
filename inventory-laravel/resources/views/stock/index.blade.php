@@ -4,26 +4,26 @@
 <div class="space-y-6">
 
     <!-- Header Page & Action Buttons -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-zinc-200/80">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200/80">
         <div>
-            <nav class="flex items-center gap-1.5 text-xs text-zinc-400 font-mono mb-1.5">
+            <nav class="flex items-center gap-1.5 text-xs text-slate-400 font-mono mb-1.5">
                 <span>Logistik</span>
-                <span class="text-zinc-300">/</span>
-                <span class="text-zinc-700 font-medium">Mutasi Stok</span>
+                <span class="text-slate-300">/</span>
+                <span class="text-slate-700 font-medium">Mutasi Stok</span>
             </nav>
-            <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">Riwayat Mutasi Stok</h1>
-            <p class="text-xs sm:text-sm text-zinc-500 mt-0.5">Buku besar audit seluruh pergerakan barang masuk dan keluar gudang.</p>
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Riwayat Mutasi Stok</h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Buku besar audit seluruh pergerakan barang masuk dan keluar gudang.</p>
         </div>
 
         <div class="flex items-center gap-2.5">
-            <a href="{{ route('stock.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('stock.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 <span>Barang Masuk (IN)</span>
             </a>
-            <a href="{{ route('stock.createOut') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('stock.createOut') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-900 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
                 </svg>
                 <span>Barang Keluar (OUT)</span>
@@ -32,7 +32,7 @@
     </div>
 
     <!-- Filter Multi-Dimensi Toolbar -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+    <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)]">
         <form method="GET" action="{{ route('stock.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             <!-- Filter Produk -->
             <div>
@@ -94,41 +94,41 @@
     </div>
 
     <!-- Data Table Ledger -->
-    <div class="bg-white rounded-xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] overflow-hidden">
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-                <thead class="bg-slate-50/80 text-slate-500 text-[11px] font-semibold uppercase tracking-wider border-b border-slate-200/80">
+                <thead class="bg-slate-50/80 text-slate-500 font-semibold text-[11px] uppercase tracking-wider border-b border-slate-200">
                     <tr>
-                        <th class="px-6 py-3.5">Waktu Transaksi</th>
-                        <th class="px-6 py-3.5">SKU & Produk</th>
-                        <th class="px-6 py-3.5 text-center">Tipe</th>
-                        <th class="px-6 py-3.5 text-right">Jumlah Unit</th>
-                        <th class="px-6 py-3.5">Petugas</th>
-                        <th class="px-6 py-3.5">Catatan / Keterangan</th>
+                        <th class="py-3.5 px-6">Waktu Transaksi</th>
+                        <th class="py-3.5 px-6">SKU & Produk</th>
+                        <th class="py-3.5 px-6 text-center">Tipe</th>
+                        <th class="py-3.5 px-6 text-right">Jumlah Unit</th>
+                        <th class="py-3.5 px-6">Petugas</th>
+                        <th class="py-3.5 px-6">Catatan / Keterangan</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($movements as $mov)
-                        <tr class="hover:bg-slate-50/70 transition-colors">
-                            <td class="px-6 py-4 font-mono text-xs text-slate-500 whitespace-nowrap">
+                        <tr class="hover:bg-slate-50/60 transition-colors">
+                            <td class="py-3.5 px-6 font-mono text-xs text-slate-500 whitespace-nowrap">
                                 {{ $mov->created_at->format('d/m/Y H:i:s') }}
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="py-3.5 px-6">
                                 <div class="font-semibold text-slate-900">{{ $mov->product->name ?? 'Produk Dihapus' }}</div>
                                 <div class="font-mono text-xs text-slate-400 mt-0.5">{{ $mov->product->sku ?? '-' }}</div>
                             </td>
-                            <td class="px-6 py-4 text-center whitespace-nowrap">
+                            <td class="py-3.5 px-6 text-center whitespace-nowrap">
                                 <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-mono font-bold {{ $mov->type === 'IN' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-slate-100 text-slate-700 border border-slate-200/80' }}">
                                     {{ $mov->type === 'IN' ? 'MASUK' : 'KELUAR' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-right font-bold {{ $mov->type === 'IN' ? 'text-emerald-600' : 'text-slate-700' }} font-mono whitespace-nowrap">
+                            <td class="py-3.5 px-6 text-right font-bold {{ $mov->type === 'IN' ? 'text-emerald-600' : 'text-slate-800' }} font-mono whitespace-nowrap">
                                 {{ $mov->type === 'IN' ? '+' : '-' }}{{ number_format($mov->quantity) }}
                             </td>
-                            <td class="px-6 py-4 text-slate-700 whitespace-nowrap">
+                            <td class="py-3.5 px-6 text-slate-700 whitespace-nowrap">
                                 <span class="font-medium text-xs">{{ $mov->user->profile->full_name ?? $mov->user->name ?? $mov->user->username ?? 'Sistem' }}</span>
                             </td>
-                            <td class="px-6 py-4 text-slate-600 text-xs">
+                            <td class="py-3.5 px-6 text-slate-600 text-xs">
                                 {{ $mov->note ?? '-' }}
                             </td>
                         </tr>

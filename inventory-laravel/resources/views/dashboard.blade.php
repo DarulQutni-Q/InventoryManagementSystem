@@ -4,24 +4,24 @@
 <div class="space-y-6">
 
     <!-- Header Section with Minimalist Breadcrumb & Actions -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-zinc-200/80">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-slate-200/80">
         <div>
             <!-- Minimalist Breadcrumb -->
-            <nav class="flex items-center gap-1.5 text-xs text-zinc-400 font-mono mb-1.5" aria-label="Breadcrumb">
+            <nav class="flex items-center gap-1.5 text-xs text-slate-400 font-mono mb-1.5" aria-label="Breadcrumb">
                 <span>Inventori</span>
-                <span class="text-zinc-300">/</span>
-                <span class="text-zinc-700 font-medium">Dashboard</span>
+                <span class="text-slate-300">/</span>
+                <span class="text-slate-700 font-medium">Dashboard</span>
                 <span class="sr-only">Dashboard Ringkasan Inventaris</span>
             </nav>
 
             @if(Auth::user()->isAdmin())
-                <h1 class="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight">Ringkasan Eksekutif Inventaris</h1>
-                <p class="text-xs sm:text-sm text-zinc-500 mt-0.5">
+                <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Ringkasan Eksekutif Inventaris</h1>
+                <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
                     Ikhtisar manajerial valuasi aset, volume persediaan, dan indikator kesehatan stok gudang.
                 </p>
             @else
-                <h1 class="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight">Pusat Operasional Logistik</h1>
-                <p class="text-xs sm:text-sm text-zinc-500 mt-0.5">
+                <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Pusat Operasional Logistik</h1>
+                <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
                     Antarmuka kerja harian gudang untuk pemantauan fisik, pencatatan mutasi, dan aksi cepat restock barang.
                 </p>
             @endif
@@ -29,14 +29,14 @@
 
         <!-- Quick Action Buttons: Crisp, Precise, 1 SVG Icon -->
         <div class="flex items-center gap-2.5">
-            <a href="{{ route('stock.create') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('stock.create') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 <span>Catat Barang Masuk</span>
             </a>
-            <a href="{{ route('stock.createOut') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('stock.createOut') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-900 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
                 </svg>
                 <span>Catat Barang Keluar</span>
@@ -45,10 +45,10 @@
     </div>
 
     <!-- Bento Inventory Ledger Ribbon (Hairline Grid, Zero Pastel Slop) -->
-    <div class="bg-white rounded-xl border border-zinc-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] overflow-hidden">
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] overflow-hidden">
         @if(Auth::user()->isAdmin())
             <!-- Admin Metrics: Nilai Aset Terdaftar & Metrik Manajerial -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-zinc-200/80">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80">
                 <!-- Cell 1: Nilai Aset Terdaftar -->
                 <div class="p-5 lg:p-6 bg-white">
                     <div class="text-[11px] font-mono font-medium text-zinc-500 uppercase tracking-wider">
@@ -101,7 +101,7 @@
             </div>
         @else
             <!-- Staff Metrics: Mode Pusat Operasional Logistik (TANPA Nilai Rupiah) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-zinc-200/80">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80">
                 <!-- Cell 1: Antrean Restock Mendesak -->
                 <div class="p-5 lg:p-6 bg-white">
                     <div class="text-[11px] font-mono font-medium text-zinc-500 uppercase tracking-wider">
@@ -156,18 +156,18 @@
     </div>
 
     <!-- Tabel Stok Kritis & Perlu Restock -->
-    <div class="bg-white rounded-xl border border-zinc-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] overflow-hidden">
-        <div class="px-6 py-4 border-b border-zinc-200/80 flex items-center justify-between">
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200/80 flex items-center justify-between">
             <div>
-                <h2 class="font-semibold text-zinc-900 text-sm sm:text-base tracking-tight">Daftar Stok Kritis &amp; Perlu Restock</h2>
-                <p class="text-xs text-zinc-500 mt-0.5">Produk dengan tingkat persediaan fisik berada pada atau di bawah batas minimum.</p>
+                <h2 class="font-semibold text-slate-900 text-sm sm:text-base tracking-tight">Daftar Stok Kritis &amp; Perlu Restock</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Produk dengan tingkat persediaan fisik berada pada atau di bawah batas minimum.</p>
             </div>
             @if($criticalProducts->count() > 0)
-                <span class="inline-flex items-center px-2.5 py-1 text-xs font-mono font-medium text-zinc-700 bg-zinc-100 border border-zinc-200/80 rounded-md">
+                <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-mono font-medium text-amber-700 bg-amber-50 border border-amber-200/80 rounded-full">
                     {{ $criticalProducts->count() }} item butuh restock
                 </span>
             @else
-                <span class="inline-flex items-center px-2.5 py-1 text-xs font-mono font-medium text-emerald-700 bg-emerald-500/10 border border-emerald-500/20 rounded-md">
+                <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-mono font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/80 rounded-full">
                     Semua stok aman
                 </span>
             @endif
@@ -181,7 +181,7 @@
         @else
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
-                    <thead class="bg-zinc-50/75 text-zinc-500 text-[11px] font-semibold uppercase tracking-wider border-b border-zinc-200/80">
+                    <thead class="bg-slate-50/80 text-slate-500 text-[11px] font-semibold uppercase tracking-wider border-b border-slate-200/80">
                         <tr>
                             <th class="px-6 py-3.5">SKU</th>
                             <th class="px-6 py-3.5">Nama Produk</th>
@@ -192,36 +192,36 @@
                             <th class="px-6 py-3.5 text-right">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-zinc-100">
+                    <tbody class="divide-y divide-slate-100">
                         @foreach($criticalProducts as $prod)
-                            <tr class="hover:bg-zinc-50/60 transition-colors">
+                            <tr class="hover:bg-slate-50/60 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="font-mono text-xs font-medium px-2 py-0.5 bg-zinc-100 rounded text-zinc-700 border border-zinc-200/70 inline-block">
+                                    <span class="font-mono text-xs font-semibold px-2 py-0.5 bg-slate-100 rounded text-slate-700 border border-slate-200/60 inline-block">
                                         {{ $prod->sku }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 font-medium text-zinc-900">
-                                    <a href="{{ route('products.show', $prod) }}" class="hover:text-[#5e6ad2] transition-colors">
+                                <td class="px-6 py-4 font-semibold text-slate-900">
+                                    <a href="{{ route('products.show', $prod) }}" class="hover:text-indigo-600 transition-colors">
                                         {{ $prod->name }}
                                     </a>
                                 </td>
-                                <td class="px-6 py-4 text-zinc-600 text-xs">
+                                <td class="px-6 py-4 text-slate-600 text-xs">
                                     {{ $prod->category->name ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4 text-right font-bold text-rose-600 font-mono">
                                     {{ number_format($prod->stock) }}
                                 </td>
-                                <td class="px-6 py-4 text-right text-zinc-500 font-mono">
+                                <td class="px-6 py-4 text-right text-slate-500 font-mono">
                                     {{ number_format($prod->minimum_stock) }}
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="inline-flex px-2 py-0.5 rounded text-xs font-medium font-mono text-rose-600 bg-rose-500/10 border border-rose-500/20">
+                                    <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium font-mono text-amber-700 bg-amber-50 border border-amber-200/80">
                                         -{{ max(0, $prod->minimum_stock - $prod->stock) }} unit
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right whitespace-nowrap">
-                                    <a href="{{ route('stock.create', ['product_id' => $prod->id]) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-medium transition-all shadow-sm">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <a href="{{ route('stock.create', ['product_id' => $prod->id]) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium transition-all shadow-sm">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                                         </svg>
                                         <span>Restock</span>
@@ -239,22 +239,21 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- Panel Kiri: 5 Mutasi Terkini -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] overflow-hidden">
-            <div class="px-6 py-4 border-b border-zinc-200/80 flex items-center justify-between">
+        <div class="bg-white rounded-xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200/80 flex items-center justify-between">
                 <div>
-                    <h2 class="font-semibold text-zinc-900 text-sm sm:text-base tracking-tight">Mutasi Terkini</h2>
-                    <p class="text-xs text-zinc-500 mt-0.5">5 catatan pergerakan barang terbaru di gudang</p>
+                    <h2 class="font-semibold text-slate-900 text-sm sm:text-base tracking-tight">Mutasi Terkini</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">5 catatan pergerakan barang terbaru di gudang</p>
                 </div>
-                <a href="{{ route('stock.index') }}" class="text-xs font-medium text-[#5e6ad2] hover:text-[#4f5ac4] transition-colors">
+                <a href="{{ route('stock.index') }}" class="text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
                     Lihat Semua Mutasi &rarr;
                 </a>
             </div>
-
             <div class="divide-y divide-zinc-100">
                 @forelse($recentMovements as $mov)
                     <div class="p-4 flex items-center justify-between hover:bg-zinc-50/60 transition-colors">
                         <div class="flex items-center gap-3">
-                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg font-mono text-xs font-semibold {{ $mov->type === 'IN' ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20' : 'bg-zinc-100 text-zinc-700 border border-zinc-200/80' }}">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg font-mono text-xs font-semibold {{ $mov->type === 'IN' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-slate-100 text-slate-700 border border-slate-200/80' }}">
                                 {{ $mov->type }}
                             </span>
                             <div>
@@ -279,16 +278,15 @@
         </div>
 
         <!-- Panel Kanan: Agregasi Mutasi Per Produk (Top Volume) -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] overflow-hidden">
-            <div class="px-6 py-4 border-b border-zinc-200/80">
-                <h2 class="font-semibold text-zinc-900 text-sm sm:text-base tracking-tight">Agregasi Volume Per Produk</h2>
-                <p class="text-xs text-zinc-500 mt-0.5">Akumulasi pergerakan barang tertinggi berdasarkan query analitik</p>
+        <div class="bg-white rounded-xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200/80">
+                <h2 class="font-semibold text-slate-900 text-sm sm:text-base tracking-tight">Agregasi Volume Per Produk</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Akumulasi pergerakan barang tertinggi berdasarkan query analitik</p>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
-                    <thead class="bg-zinc-50/75 text-zinc-500 text-[11px] font-semibold uppercase tracking-wider border-b border-zinc-200/80">
-                        <tr>
+                    <thead class="bg-slate-50/80 text-slate-500 text-[11px] font-semibold uppercase tracking-wider border-b border-slate-200/80">
                             <th class="px-6 py-3.5">Nama Produk &amp; SKU</th>
                             <th class="px-6 py-3.5 text-right">Total Masuk (IN)</th>
                             <th class="px-6 py-3.5 text-right">Total Keluar (OUT)</th>

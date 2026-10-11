@@ -4,32 +4,32 @@
 <div class="max-w-xl mx-auto space-y-6">
 
     <!-- Header Page -->
-    <div class="flex items-center justify-between pb-4 border-b border-zinc-200/80">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-200/80">
         <div>
-            <nav class="flex items-center gap-1.5 text-xs text-zinc-400 font-mono mb-1.5">
+            <nav class="flex items-center gap-1.5 text-xs text-slate-400 font-mono mb-1.5">
                 <span>Logistik</span>
-                <span class="text-zinc-300">/</span>
-                <span class="text-zinc-700 font-medium">Barang Keluar</span>
+                <span class="text-slate-300">/</span>
+                <span class="text-slate-700 font-medium">Barang Keluar</span>
             </nav>
-            <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">Pencatatan Barang Keluar (OUT)</h1>
-            <p class="text-xs sm:text-sm text-zinc-500 mt-0.5">Pengurangan saldo persediaan untuk pengiriman atau penggunaan internal.</p>
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Pencatatan Barang Keluar (OUT)</h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Pengurangan saldo persediaan untuk pengiriman atau penggunaan internal.</p>
         </div>
-        <a href="{{ route('stock.index') }}" class="px-3.5 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs sm:text-sm font-medium transition-colors">
+        <a href="{{ route('stock.index') }}" class="px-3.5 py-2 rounded-lg bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-medium transition-colors shadow-xs">
             &larr; Riwayat Mutasi
         </a>
     </div>
 
     <!-- Form Container -->
-    <form action="{{ route('stock.store') }}" method="POST" id="stockOutForm" class="bg-white rounded-xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-6 sm:p-8 space-y-5">
+    <form action="{{ route('stock.store') }}" method="POST" id="stockOutForm" class="bg-white rounded-xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] p-6 sm:p-8 space-y-5">
         @csrf
         <input type="hidden" name="type" value="OUT">
 
         <!-- Banner Info Pessimistic Locking & Proteksi Stok Negatif -->
-        <div class="p-3.5 rounded-lg bg-amber-50/70 border border-amber-200/80 text-amber-900 text-xs flex items-start gap-2.5">
-            <svg class="w-4.5 h-4.5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="p-4 rounded-xl bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs flex items-start gap-3">
+            <svg class="w-5 h-5 text-amber-600 flex-shrink-0" style="width: 20px; height: 20px; min-width: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
             </svg>
-            <div>
+            <div class="leading-relaxed">
                 <span class="font-bold">Pessimistic Locking Aktif (SELECT ... FOR UPDATE):</span>
                 Baris produk dikunci selama transaksi untuk mencegah race condition (TOCTOU). Transaksi otomatis dibatalkan bila kuantitas melebihi sisa fisik.
             </div>
@@ -93,11 +93,11 @@
         </div>
 
         <!-- Tombol Aksi -->
-        <div class="pt-4 border-t border-zinc-100 flex items-center justify-end gap-3">
-            <a href="{{ route('stock.index') }}" class="px-4 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs sm:text-sm font-medium transition-colors">
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+            <a href="{{ route('stock.index') }}" class="px-4 py-2 rounded-lg bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-medium transition-colors shadow-xs">
                 Batal
             </a>
-            <button type="submit" id="submitBtn" class="px-5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
+            <button type="submit" id="submitBtn" class="px-5 py-2 rounded-lg bg-slate-800 hover:bg-slate-900 text-white text-xs sm:text-sm font-medium transition-all shadow-sm">
                 Catat Barang Keluar
             </button>
         </div>
