@@ -219,23 +219,30 @@ transaksi stok, histori, dan dashboard.
 
 ---
 
-## Roadmap ke P5 (Laravel)
+## Fase 2 — P5: Migrasi ke Laravel Framework (Selesai)
 
-Setelah P4 selesai dan diverifikasi, proyek ini akan direfactor ke Laravel. Business logic
-yang sudah ada dipertahankan, hanya arsitekturnya yang berubah:
+Aplikasi telah berhasil dimigrasikan dan diimplementasikan secara komprehensif ke Laravel 12 di dalam direktori `inventory-laravel/`. Seluruh business logic, proteksi ACID, relasi relasional, dan kontrol otorisasi (RBAC) dipertahankan sepenuhnya:
 
-| Komponen P4 | Padanan P5 |
+| Komponen P4 | Implementasi P5 di `inventory-laravel/` |
 |---|---|
-| `config/database.php` (PDO) | `.env` + `config/database.php` (Eloquent) |
-| `views/layouts/header.php` | `resources/views/layouts/app.blade.php` |
-| `helpers/auth.php` | Laravel Auth + middleware |
-| File CRUD per aksi terpisah | Resource Controller (`--resource`) |
-| `database/schema.sql` | `database/migrations/` dengan timestamp |
+| `config/database.php` (PDO) | `.env` SQLite / MySQL via Eloquent ORM |
+| `views/layouts/main.php` | `resources/views/layouts/app.blade.php` (Blade + Tailwind CDN, Fixed Sidebar & Navbar) |
+| `helpers/auth.php` | Laravel Auth Guard + `EnsureUserIsAdmin` Middleware (HTTP 403 untuk staff) |
+| Skrip CRUD terpisah | Resource Controllers (`ProductController`, `CategoryController`, `SupplierController`, `StockMovementController`, `UserController`) |
+| `database/schema.sql` | 7 Migrasi terurut chronologis + `DatabaseSeeder` dengan data realistis |
+| Transaksi Stok Manual | `DB::transaction()` + Pessimistic Locking (`lockForUpdate()`) di Eloquent |
+| Test Native | PHPUnit Feature Tests (`tests/Feature/InventoryTest.php` 18 tests, 51 assertions) |
 
-Urutan migrasi yang perlu diperhatikan: users, categories, suppliers, products,
-user_profiles, product_suppliers, stock_movements. Timestamp migration harus mencerminkan
-urutan ini karena ada foreign key dependency antar tabel.
-
+### Cara Menjalankan Laravel P5:
+```bash
+cd inventory-laravel
+cp .env.example .env # jika belum ada
+php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan test
+php artisan serve
+```
+Buka browser ke `http://localhost:8000`. Login dengan akun `admin` / `admin123` atau `staff` / `staff123`.
 ---
 
 ## Konteks Tugas
