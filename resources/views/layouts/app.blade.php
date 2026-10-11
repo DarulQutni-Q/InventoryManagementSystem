@@ -45,32 +45,29 @@
                         </svg>
                     </div>
                     <span class="font-bold text-white tracking-tight text-lg">Inventoria</span>
-                    <span class="hidden sm:inline-block px-2 py-0.5 text-xs font-medium rounded bg-slate-800 text-slate-400 border border-slate-700">P5 Laravel</span>
                 </a>
             </div>
 
             <!-- Navbar Right: User & Actions -->
             <div class="flex items-center gap-3">
                 @auth
-                    <div class="hidden sm:flex flex-col text-right">
-                        <span class="text-xs font-semibold text-white">{{ Auth::user()->profile->full_name ?? Auth::user()->name ?? Auth::user()->username }}</span>
-                        <span class="text-[11px] text-slate-400 uppercase tracking-wider font-mono">
-                            {{ Auth::user()->role === 'admin' ? 'Administrator' : 'Staff Gudang' }}
+                    <div class="flex items-center gap-3">
+                        <div class="hidden sm:flex flex-col text-right">
+                            <span class="text-xs font-semibold text-slate-100">{{ Auth::user()->profile->full_name ?? Auth::user()->name ?? Auth::user()->username }}</span>
+                            <span class="text-[11px] text-slate-400">{{ Auth::user()->isAdmin() ? 'Administrator' : 'Staff Gudang' }}</span>
+                        </div>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium {{ Auth::user()->isAdmin() ? 'bg-indigo-900/60 text-indigo-200 border border-indigo-700/50' : 'bg-slate-800 text-slate-300 border border-slate-700/60' }}">
+                            {{ Auth::user()->isAdmin() ? 'Admin' : 'Staff' }}
                         </span>
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors" title="Keluar dari Sistem">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                </svg>
+                            </button>
+                        </form>
                     </div>
-
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ Auth::user()->isAdmin() ? 'bg-indigo-950 text-indigo-300 border border-indigo-700/60' : 'bg-slate-800 text-slate-300 border border-slate-700' }}">
-                        {{ strtoupper(Auth::user()->role) }}
-                    </span>
-
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-md transition-colors" title="Keluar dari Sistem">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                            </svg>
-                        </button>
-                    </form>
                 @endauth
             </div>
         </header>
@@ -157,8 +154,8 @@
 
             <!-- Sidebar Footer -->
             <div class="p-4 border-t border-slate-800 text-xs text-slate-400">
-                <div class="font-medium text-slate-300">Inventoria v2.0 (P5)</div>
-                <div class="text-[11px] text-slate-400">Laravel 12 &middot; SQLite Engine</div>
+                <div class="font-medium text-slate-300">Inventoria</div>
+                <div class="text-[11px] text-slate-500">Sistem Inventaris Gudang</div>
             </div>
         </aside>
 
@@ -217,7 +214,7 @@
             </div>
 
             <footer class="border-t border-slate-200 bg-white py-4 px-6 text-center text-xs text-slate-500 mt-auto">
-                &copy; {{ date('Y') }} Inventoria Management System &mdash; Pemrograman Website MiniProject 03 (P5 Laravel)
+                &copy; {{ date('Y') }} Inventoria Management System &mdash; Sistem Manajemen Inventaris Gudang
             </footer>
         </main>
     </div>

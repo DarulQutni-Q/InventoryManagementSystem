@@ -15,6 +15,10 @@
                 </svg>
                 Tambah Kategori
             </a>
+        @else
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-100 border border-slate-200 text-slate-600 text-xs font-medium self-start sm:self-auto">
+                Katalog (Mode Baca)
+            </span>
         @endif
     </div>
 
@@ -86,7 +90,7 @@
                                         </form>
                                     </div>
                                 @else
-                                    <span class="text-xs text-slate-400">Read-only</span>
+                                    <span class="text-xs text-slate-400 font-mono">Mode Baca</span>
                                 @endif
                             </td>
                         </tr>

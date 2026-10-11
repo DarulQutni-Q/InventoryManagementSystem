@@ -15,6 +15,10 @@
                 </svg>
                 Tambah Produk
             </a>
+        @else
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-100 border border-slate-200 text-slate-600 text-xs font-medium self-start sm:self-auto">
+                Katalog (Mode Baca)
+            </span>
         @endif
     </div>
 
@@ -123,13 +127,11 @@
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($product->isLowStock())
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
+                                    <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-rose-50 border border-rose-200 text-rose-700">
                                         Stok Kritis
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                                    <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 border border-emerald-200 text-emerald-700">
                                         Aman
                                     </span>
                                 @endif
