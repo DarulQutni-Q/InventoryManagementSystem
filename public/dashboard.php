@@ -7,7 +7,7 @@ require_once __DIR__ . '/../helpers/escape.php';
 
 requireLogin();
 
-// ── 4 Stat Queries ────────────────────────────────────────────────────────
+// 4 stat queries
 $total_products = (int)$pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
 
 $total_value = (float)$pdo->query('SELECT COALESCE(SUM(stock * price), 0) FROM products')->fetchColumn();
@@ -26,7 +26,7 @@ $movement_row = $pdo->query(
 $total_in  = (int)$movement_row['total_in'];
 $total_out = (int)$movement_row['total_out'];
 
-// ── Produk Stok Kritis ────────────────────────────────────────────────────
+// produk stok kritis
 $low_products = $pdo->query(
     'SELECT p.id, p.sku, p.name, p.stock, p.minimum_stock, c.name AS category_name
      FROM products p
@@ -36,7 +36,7 @@ $low_products = $pdo->query(
      LIMIT 10'
 )->fetchAll(PDO::FETCH_ASSOC);
 
-// ── Laporan Agregat (persis query dari slide P4 dosen) ───────────────────
+// laporan agregat pergerakan produk
 $report = $pdo->query(
     "SELECT p.id, p.sku, p.name, p.stock, c.name AS category_name,
             SUM(CASE WHEN sm.type = 'IN'  THEN sm.quantity ELSE 0 END) AS total_in,
@@ -59,7 +59,7 @@ require_once __DIR__ . '/../views/layouts/header.php';
 
 <h1 class="text-xl font-bold text-slate-800 mb-6">Dashboard Inventori</h1>
 
-<!-- ── 4 Widget Statistik ────────────────────────────────────────────── -->
+<!-- 4 widget statistik -->
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
@@ -94,7 +94,7 @@ require_once __DIR__ . '/../views/layouts/header.php';
 
 </div>
 
-<!-- ── Alert Stok Kritis ──────────────────────────────────────────────── -->
+<!-- alert stok kritis -->
 <?php if (!empty($low_products)): ?>
 <div class="mb-8">
     <h2 class="text-base font-semibold text-slate-700 mb-3">
@@ -140,7 +140,7 @@ require_once __DIR__ . '/../views/layouts/header.php';
 </div>
 <?php endif; ?>
 
-<!-- ── Laporan Agregat Inventaris ─────────────────────────────────────── -->
+<!-- laporan agregat inventaris -->
 <div>
     <h2 class="text-base font-semibold text-slate-700 mb-3">Laporan Agregat Inventaris</h2>
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">

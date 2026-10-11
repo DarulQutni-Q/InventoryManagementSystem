@@ -33,7 +33,7 @@ $current_uri  = $_SERVER['REQUEST_URI'] ?? '';
 </head>
 <body class="h-full font-sans antialiased text-slate-800">
 
-<!-- ── NAVBAR ATAS ─────────────────────────────────────────────────── -->
+<!-- navbar atas -->
 <!-- Posisi fixed agar tetap terlihat saat halaman discroll -->
 <nav class="fixed top-0 inset-x-0 z-30 h-14 bg-indigo-700 shadow-md flex items-center px-4 gap-3">
 
@@ -69,7 +69,7 @@ $current_uri  = $_SERVER['REQUEST_URI'] ?? '';
     </div>
 </nav>
 
-<!-- ── WRAPPER: SIDEBAR + KONTEN ─────────────────────────────────── -->
+<!-- wrapper: sidebar + konten -->
 <div class="flex h-full pt-14">
 
 <?php require_once __DIR__ . '/sidebar.php'; ?>

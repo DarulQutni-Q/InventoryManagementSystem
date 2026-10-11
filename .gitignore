@@ -1,10 +1,4 @@
-# ==============================================================================
-# .gitignore — Inventory Management System (PHP Native & Laravel Ready)
-# ==============================================================================
-
-# ------------------------------------------------------------------------------
-# 1. Environment & Kredensial
-# ------------------------------------------------------------------------------
+# environment & credentials
 .env
 .env.*
 .env.backup
@@ -13,9 +7,7 @@
 config/database.php
 !config/database.example.php
 
-# ------------------------------------------------------------------------------
-# 2. Database Lokal & Berkas Sementara
-# ------------------------------------------------------------------------------
+# sqlite & temp databases
 *.sqlite
 *.sqlite3
 *.db
@@ -23,9 +15,7 @@ database/*.sqlite
 database/*.sqlite-journal
 tests/*.sqlite
 
-# ------------------------------------------------------------------------------
-# 3. Paket & Dependensi
-# ------------------------------------------------------------------------------
+# dependencies
 vendor/
 node_modules/
 npm-debug.log*
@@ -33,18 +23,14 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# ------------------------------------------------------------------------------
-# 4. Cache, Temp & Analisis
-# ------------------------------------------------------------------------------
+# logs & cache
 *.log
 .phpunit.cache/
 .phpunit.result.cache
 .slides_raw/
 .slides_analysis/
 
-# ------------------------------------------------------------------------------
-# 5. OS & Editor
-# ------------------------------------------------------------------------------
+# os & ide
 .DS_Store
 Thumbs.db
 .idea/
@@ -54,9 +40,7 @@ Thumbs.db
 *.swo
 *~
 
-# ------------------------------------------------------------------------------
-# 6. Laravel Artifacts (Persiapan P5)
-# ------------------------------------------------------------------------------
+# laravel
 storage/*.key
 storage/framework/cache/*
 !storage/framework/cache/.gitignore

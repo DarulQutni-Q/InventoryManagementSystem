@@ -11,7 +11,7 @@
 define('ROOT', dirname(__DIR__) . '/');
 require_once ROOT . 'config/database.php';
 
-// ── Infrastruktur Test ────────────────────────────────────────────────────
+// pencatat hasil pengujian
 $pass = 0;
 $fail = 0;
 
@@ -25,7 +25,7 @@ function assert_equal(string $name, $expected, $actual): void {
     assert_true("{$name} (expected={$expected}, got={$actual})", $expected === $actual);
 }
 
-// ── Setup: buat data uji terisolasi ──────────────────────────────────────
+// setup: buat data uji terisolasi
 $test_cat_id  = null;
 $test_prod_id = null;
 $test_user_id = null;
@@ -197,7 +197,7 @@ if (!empty($agg)) {
     assert_true('Kolom category_name ada', array_key_exists('category_name', $first));
 }
 
-// ── Ringkasan ─────────────────────────────────────────────────────────────
+// ringkasan hasil pengujian
 echo "\n" . str_repeat('─', 40) . "\n";
 echo "Hasil: {$pass} PASS, {$fail} FAIL\n";
 exit($fail > 0 ? 1 : 0);

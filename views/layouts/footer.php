@@ -22,7 +22,7 @@
         }, 5000);
     });
 
-    // ── Toggle sidebar mobile ──────────────────────────────────────
+    // toggle sidebar mobile
     var btn     = document.getElementById('sidebar-toggle');
     var sidebar = document.getElementById('sidebar');
     var overlay = document.getElementById('sidebar-overlay');

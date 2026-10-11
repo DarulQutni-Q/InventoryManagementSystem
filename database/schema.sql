@@ -1,7 +1,4 @@
--- ==============================================================================
--- schema.sql — DDL Skema Relasional & Seed Data Inventory Management System
--- Menggunakan MySQL InnoDB: referential integrity dijaga ketat di level basis data.
--- ==============================================================================
+-- schema.sql — DDL skema relasional & seed data (MySQL InnoDB)
 
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS stock_movements;
@@ -89,9 +86,7 @@ CREATE TABLE stock_movements (
     FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ==============================================================================
--- SEED DATA REALISTIS
--- ==============================================================================
+-- Seed data awal
 
 -- Password hash bcrypt: admin123 & staff123 (keamanan OWASP tidak simpan plaintext)
 INSERT INTO users (id, username, password, role) VALUES

@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../helpers/escape.php';
 
 requireLogin();
 
-// ── Filter ────────────────────────────────────────────────────────────────
+// filter parameter
 $filter_product = (int)($_GET['product_id'] ?? 0);
 $filter_type    = in_array($_GET['type'] ?? '', ['IN', 'OUT']) ? $_GET['type'] : '';
 $filter_from    = $_GET['date_from'] ?? '';

@@ -19,7 +19,6 @@ if (!function_exists('nav_class')) {
 $is_admin = ($_SESSION['role'] ?? '') === 'admin';
 ?>
 
-<!-- ── SIDEBAR ──────────────────────────────────────────────────────── -->
 <!-- Desktop: static. Mobile: slide-in dari kiri, toggle via JS di footer.php -->
 <aside id="sidebar"
        class="fixed lg:static inset-y-0 left-0 z-20 w-60 bg-slate-800 flex flex-col pt-14 lg:pt-0
@@ -28,7 +27,6 @@ $is_admin = ($_SESSION['role'] ?? '') === 'admin';
 
     <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
 
-        <!-- ── Utama ─────────────────────────────────────────────── -->
         <p class="px-3 pt-1 pb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Utama</p>
 
         <a href="/dashboard.php" class="<?= nav_class('/dashboard') ?>">
@@ -39,7 +37,6 @@ $is_admin = ($_SESSION['role'] ?? '') === 'admin';
             Dashboard
         </a>
 
-        <!-- ── Master Data ──────────────────────────────────────── -->
         <p class="px-3 pt-4 pb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Master Data</p>
 
         <a href="/categories/index.php" class="<?= nav_class('/categories') ?>">
@@ -66,7 +63,6 @@ $is_admin = ($_SESSION['role'] ?? '') === 'admin';
             Supplier
         </a>
 
-        <!-- ── Transaksi Stok ────────────────────────────────────── -->
         <p class="px-3 pt-4 pb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Transaksi Stok</p>
 
         <a href="/stock/in.php" class="<?= nav_class('/stock/in') ?>">
@@ -94,7 +90,6 @@ $is_admin = ($_SESSION['role'] ?? '') === 'admin';
         </a>
 
         <?php if ($is_admin): ?>
-        <!-- ── Administrasi (Admin only) ─────────────────────────── -->
         <!-- Disembunyikan di level view SEKALIGUS di level controller —
              defense in depth: view hide tidak cukup kalau URL langsung diakses -->
         <p class="px-3 pt-4 pb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Administrasi</p>
