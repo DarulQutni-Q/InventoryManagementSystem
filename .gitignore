@@ -34,6 +34,11 @@ pnpm-debug.log*
 .slides_raw/
 .slides_analysis/
 
+# docs
+PRD.md
+DESIGN.md
+RULES.md
+
 # os & ide
 .DS_Store
 Thumbs.db
