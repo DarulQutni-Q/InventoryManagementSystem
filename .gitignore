@@ -1,3 +1,70 @@
-PRD.md
-database/*.sqlite
+# ==============================================================================
+# .gitignore — Inventory Management System (PHP Native & Laravel Ready)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Environment & Kredensial
+# ------------------------------------------------------------------------------
 .env
+.env.*
+.env.backup
+.env.production
+!.env.example
+config/database.php
+!config/database.example.php
+
+# ------------------------------------------------------------------------------
+# 2. Database Lokal & Berkas Sementara
+# ------------------------------------------------------------------------------
+*.sqlite
+*.sqlite3
+*.db
+database/*.sqlite
+database/*.sqlite-journal
+tests/*.sqlite
+
+# ------------------------------------------------------------------------------
+# 3. Paket & Dependensi
+# ------------------------------------------------------------------------------
+vendor/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ------------------------------------------------------------------------------
+# 4. Cache, Temp & Analisis
+# ------------------------------------------------------------------------------
+*.log
+.phpunit.cache/
+.phpunit.result.cache
+.slides_raw/
+.slides_analysis/
+
+# ------------------------------------------------------------------------------
+# 5. OS & Editor
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sublime-*
+*.swp
+*.swo
+*~
+
+# ------------------------------------------------------------------------------
+# 6. Laravel Artifacts (Persiapan P5)
+# ------------------------------------------------------------------------------
+storage/*.key
+storage/framework/cache/*
+!storage/framework/cache/.gitignore
+storage/framework/sessions/*
+!storage/framework/sessions/.gitignore
+storage/framework/views/*
+!storage/framework/views/.gitignore
+storage/logs/*
+!storage/logs/.gitignore
+public/storage
+public/hot
