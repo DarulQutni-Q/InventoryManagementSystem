@@ -234,72 +234,71 @@
                 </div>
 
                 <div class="space-y-3">
-                    @forelse($criticalItems as $index => $prod)
-                        @php
-                            $deficit = max(0, $prod->minimum_stock - $prod->stock);
-                            // Khusus item paling pertama di kolom kritis: gunakan kartu hitam Charcoal (#1C1D1F) persis seperti kartu "Prime Estate"!
-                            $isTopCritical = ($index === 0);
-                        @endphp
-
-                        @if($isTopCritical)
-                            <!-- Kartu Terfokus / Charcoal Gelap #1C1D1F -->
-                            <div class="bg-[#1C1D1F] text-white rounded-2xl p-5 shadow-sm border border-black/10 transition-all hover:shadow-md">
+                    @forelse($criticalItems as $prod)
+                        <div class="bg-white rounded-2xl p-5 border border-black/[0.05] shadow-2xs hover:shadow-sm transition-all flex flex-col justify-between group space-y-3">
+                            <div class="space-y-3">
                                 <div class="flex items-start justify-between gap-2">
-                                    <span class="text-[11px] font-mono font-medium text-stone-400">SKU: {{ $prod->sku }}</span>
-                                    <span class="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 font-mono text-[10px] font-bold border border-rose-500/30">
-                                        Perlu Reorder
+                                    <span class="font-mono text-xs px-2.5 py-1 rounded-md bg-stone-100 text-stone-700 font-semibold border border-black/[0.04]">
+                                        {{ $prod->sku }}
+                                    </span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-mono bg-rose-100 text-rose-800">
+                                        Stok Kritis
                                     </span>
                                 </div>
-                                
-                                <h4 class="text-base font-bold text-white mt-2 leading-snug">
-                                    {{ $prod->name }}
-                                </h4>
-                                <div class="text-xs text-stone-400 mt-0.5">
-                                    {{ $prod->category->name ?? 'Tanpa Kategori' }}
+
+                                <div>
+                                    <a href="{{ route('products.show', $prod) }}" class="font-bold text-stone-900 group-hover:text-black transition-colors block text-base leading-snug">
+                                        {{ $prod->name }}
+                                    </a>
+                                    <div class="text-xs text-stone-400 mt-1 flex items-center gap-1.5">
+                                        <span>{{ $prod->category->name ?? 'Tanpa Kategori' }}</span>
+                                    </div>
                                 </div>
 
-                                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                                <div class="pt-3 border-t border-stone-100 grid grid-cols-2 gap-2 text-xs">
                                     <div>
-                                        <div class="text-[10px] text-stone-400 uppercase font-mono">Sisa Fisik</div>
-                                        <div class="font-mono font-extrabold text-rose-400 text-sm">
-                                            {{ $prod->stock }} unit
+                                        <div class="text-[10px] font-mono uppercase text-stone-400">Harga Jual</div>
+                                        <div class="font-mono font-bold text-stone-900 mt-0.5">
+                                            Rp {{ number_format($prod->price, 0, ',', '.') }}
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <div class="text-[10px] text-stone-400 uppercase font-mono">Defisit</div>
-                                        <div class="font-mono font-bold text-stone-300 text-sm">
-                                            -{{ $deficit }} unit
+                                        <div class="text-[10px] font-mono uppercase text-stone-400">Saldo Fisik</div>
+                                        <div class="font-mono font-extrabold mt-0.5 text-rose-700">
+                                            {{ number_format($prod->stock) }} unit
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="mt-4">
-                                    <a href="{{ route('stock.create', ['product_id' => $prod->id]) }}" class="w-full inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-stone-100 text-stone-900 text-xs font-semibold transition-all">
-                                        <span>+ Restock Masuk</span>
+                            <div class="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                                <a href="{{ route('products.show', $prod) }}" class="text-xs font-semibold text-stone-700 hover:text-black">
+                                    Detail &rarr;
+                                </a>
+
+                                <div class="flex items-center gap-1.5">
+                                    <a href="{{ route('stock.create', ['product_id' => $prod->id]) }}" class="px-2.5 py-1 rounded-lg bg-[#ECEEE8] hover:bg-stone-200 text-stone-800 text-[11px] font-semibold transition-colors" title="Restock Masuk">
+                                        + Restock
                                     </a>
+                                    @if(Auth::user()->isAdmin())
+                                        <a href="{{ route('products.edit', $prod) }}" class="p-1.5 rounded-lg border border-stone-200 text-stone-600 hover:text-stone-900 hover:bg-stone-50" title="Edit Produk">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                            </svg>
+                                        </a>
+                                        <form action="{{ route('products.destroy', $prod) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk {{ $prod->name }}?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-1.5 rounded-lg border border-stone-200 text-stone-600 hover:text-rose-600 hover:bg-rose-50" title="Hapus Produk">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </div>
-                        @else
-                            <!-- Kartu Standar Putih Murni -->
-                            <div class="bg-white rounded-2xl p-4.5 border border-black/[0.05] shadow-2xs hover:shadow-sm transition-all space-y-3">
-                                <div class="flex items-start justify-between gap-2">
-                                    <span class="text-[11px] font-mono text-stone-400">SKU: {{ $prod->sku }}</span>
-                                    <span class="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 font-mono text-[10px] font-semibold">
-                                        Perlu Reorder
-                                    </span>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-bold text-stone-900 leading-snug">{{ $prod->name }}</h4>
-                                    <div class="text-[11px] text-stone-500 mt-0.5">{{ $prod->category->name ?? 'Umum' }}</div>
-                                </div>
-                                <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-                                    <span class="font-mono font-bold text-rose-600">Sisa: {{ $prod->stock }} unit</span>
-                                    <a href="{{ route('stock.create', ['product_id' => $prod->id]) }}" class="text-xs font-semibold text-stone-900 hover:underline">
-                                        + Restock &rarr;
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
+                        </div>
                     @empty
                         <div class="p-6 rounded-2xl bg-white/60 border border-dashed border-stone-200 text-center text-xs text-stone-400">
                             Tidak ada item berstatus stok kritis.
@@ -322,26 +321,68 @@
 
                 <div class="space-y-3">
                     @forelse($reorderItems as $prod)
-                        @php $deficit = max(0, $prod->minimum_stock - $prod->stock); @endphp
-                        <div class="bg-white rounded-2xl p-4.5 border border-black/[0.05] shadow-2xs hover:shadow-sm transition-all space-y-3">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-[11px] font-mono text-stone-400">SKU: {{ $prod->sku }}</span>
-                                <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 font-mono text-[10px] font-semibold border border-amber-200/50">
-                                    Min {{ $prod->minimum_stock }}
-                                </span>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-stone-900 leading-snug">{{ $prod->name }}</h4>
-                                <div class="text-[11px] text-stone-500 mt-0.5">{{ $prod->category->name ?? 'Umum' }}</div>
-                            </div>
-                            <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-                                <div>
-                                    <span class="font-mono font-bold text-amber-700">{{ $prod->stock }} unit</span>
-                                    <span class="text-[10px] text-stone-400"> (Defisit {{ $deficit }})</span>
+                        <div class="bg-white rounded-2xl p-5 border border-black/[0.05] shadow-2xs hover:shadow-sm transition-all flex flex-col justify-between group space-y-3">
+                            <div class="space-y-3">
+                                <div class="flex items-start justify-between gap-2">
+                                    <span class="font-mono text-xs px-2.5 py-1 rounded-md bg-stone-100 text-stone-700 font-semibold border border-black/[0.04]">
+                                        {{ $prod->sku }}
+                                    </span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-mono bg-amber-100 text-amber-800">
+                                        Perlu Reorder
+                                    </span>
                                 </div>
-                                <a href="{{ route('stock.create', ['product_id' => $prod->id]) }}" class="px-3 py-1 rounded-full bg-[#18181B] hover:bg-black text-white text-[11px] font-semibold transition-all">
-                                    Restock
+
+                                <div>
+                                    <a href="{{ route('products.show', $prod) }}" class="font-bold text-stone-900 group-hover:text-black transition-colors block text-base leading-snug">
+                                        {{ $prod->name }}
+                                    </a>
+                                    <div class="text-xs text-stone-400 mt-1 flex items-center gap-1.5">
+                                        <span>{{ $prod->category->name ?? 'Tanpa Kategori' }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="pt-3 border-t border-stone-100 grid grid-cols-2 gap-2 text-xs">
+                                    <div>
+                                        <div class="text-[10px] font-mono uppercase text-stone-400">Harga Jual</div>
+                                        <div class="font-mono font-bold text-stone-900 mt-0.5">
+                                            Rp {{ number_format($prod->price, 0, ',', '.') }}
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-[10px] font-mono uppercase text-stone-400">Saldo Fisik</div>
+                                        <div class="font-mono font-extrabold mt-0.5 text-amber-700">
+                                            {{ number_format($prod->stock) }} unit
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                                <a href="{{ route('products.show', $prod) }}" class="text-xs font-semibold text-stone-700 hover:text-black">
+                                    Detail &rarr;
                                 </a>
+
+                                <div class="flex items-center gap-1.5">
+                                    <a href="{{ route('stock.create', ['product_id' => $prod->id]) }}" class="px-2.5 py-1 rounded-lg bg-[#ECEEE8] hover:bg-stone-200 text-stone-800 text-[11px] font-semibold transition-colors" title="Restock Masuk">
+                                        + Restock
+                                    </a>
+                                    @if(Auth::user()->isAdmin())
+                                        <a href="{{ route('products.edit', $prod) }}" class="p-1.5 rounded-lg border border-stone-200 text-stone-600 hover:text-stone-900 hover:bg-stone-50" title="Edit Produk">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                            </svg>
+                                        </a>
+                                        <form action="{{ route('products.destroy', $prod) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk {{ $prod->name }}?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-1.5 rounded-lg border border-stone-200 text-stone-600 hover:text-rose-600 hover:bg-rose-50" title="Hapus Produk">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     @empty
@@ -352,7 +393,7 @@
                 </div>
             </div>
 
-            <!-- KOLOM 3: Stok Aman (Header + Counter ↓) -->
+            <!-- KOLOM 3: Stok Aman (Header + Counter v) -->
             <div class="space-y-3.5">
                 <div class="flex items-center justify-between px-1">
                     <div class="flex items-center gap-2">
@@ -366,22 +407,68 @@
 
                 <div class="space-y-3">
                     @forelse($safeItems as $prod)
-                        <div class="bg-white rounded-2xl p-4.5 border border-black/[0.05] shadow-2xs hover:shadow-sm transition-all space-y-3">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-[11px] font-mono text-stone-400">SKU: {{ $prod->sku }}</span>
-                                <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-mono text-[10px] font-semibold">
-                                    Optimal
-                                </span>
+                        <div class="bg-white rounded-2xl p-5 border border-black/[0.05] shadow-2xs hover:shadow-sm transition-all flex flex-col justify-between group space-y-3">
+                            <div class="space-y-3">
+                                <div class="flex items-start justify-between gap-2">
+                                    <span class="font-mono text-xs px-2.5 py-1 rounded-md bg-stone-100 text-stone-700 font-semibold border border-black/[0.04]">
+                                        {{ $prod->sku }}
+                                    </span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-mono bg-emerald-100 text-emerald-800">
+                                        Stok Aman
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <a href="{{ route('products.show', $prod) }}" class="font-bold text-stone-900 group-hover:text-black transition-colors block text-base leading-snug">
+                                        {{ $prod->name }}
+                                    </a>
+                                    <div class="text-xs text-stone-400 mt-1 flex items-center gap-1.5">
+                                        <span>{{ $prod->category->name ?? 'Tanpa Kategori' }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="pt-3 border-t border-stone-100 grid grid-cols-2 gap-2 text-xs">
+                                    <div>
+                                        <div class="text-[10px] font-mono uppercase text-stone-400">Harga Jual</div>
+                                        <div class="font-mono font-bold text-stone-900 mt-0.5">
+                                            Rp {{ number_format($prod->price, 0, ',', '.') }}
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-[10px] font-mono uppercase text-stone-400">Saldo Fisik</div>
+                                        <div class="font-mono font-extrabold mt-0.5 text-stone-900">
+                                            {{ number_format($prod->stock) }} unit
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-stone-900 leading-snug">{{ $prod->name }}</h4>
-                                <div class="text-[11px] text-stone-500 mt-0.5">{{ $prod->category->name ?? 'Umum' }}</div>
-                            </div>
-                            <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-                                <span class="font-mono font-bold text-emerald-700">{{ $prod->stock }} unit siap</span>
-                                <a href="{{ route('products.show', $prod) }}" class="text-xs font-medium text-stone-500 hover:text-stone-900">
+
+                            <div class="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                                <a href="{{ route('products.show', $prod) }}" class="text-xs font-semibold text-stone-700 hover:text-black">
                                     Detail &rarr;
                                 </a>
+
+                                <div class="flex items-center gap-1.5">
+                                    <a href="{{ route('stock.create', ['product_id' => $prod->id]) }}" class="px-2.5 py-1 rounded-lg bg-[#ECEEE8] hover:bg-stone-200 text-stone-800 text-[11px] font-semibold transition-colors" title="Restock Masuk">
+                                        + Restock
+                                    </a>
+                                    @if(Auth::user()->isAdmin())
+                                        <a href="{{ route('products.edit', $prod) }}" class="p-1.5 rounded-lg border border-stone-200 text-stone-600 hover:text-stone-900 hover:bg-stone-50" title="Edit Produk">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                            </svg>
+                                        </a>
+                                        <form action="{{ route('products.destroy', $prod) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk {{ $prod->name }}?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-1.5 rounded-lg border border-stone-200 text-stone-600 hover:text-rose-600 hover:bg-rose-50" title="Hapus Produk">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     @empty
@@ -392,7 +479,7 @@
                 </div>
             </div>
 
-            <!-- KOLOM 4: Mutasi Terkini (Header + Counter ↓) -->
+            <!-- KOLOM 4: Mutasi Terkini (Header + Counter v) -->
             <div class="space-y-3.5">
                 <div class="flex items-center justify-between px-1">
                     <div class="flex items-center gap-2">
@@ -406,23 +493,67 @@
 
                 <div class="space-y-3">
                     @forelse($recentMovements as $mov)
-                        @php $isIncoming = ($mov->type === 'IN'); @endphp
-                        <div class="bg-white rounded-2xl p-4.5 border border-black/[0.05] shadow-2xs hover:shadow-sm transition-all space-y-2.5">
-                            <div class="flex items-center justify-between">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-mono font-bold {{ $isIncoming ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/50' : 'bg-stone-100 text-stone-800 border border-stone-200/50' }}">
-                                    {{ $isIncoming ? '+ MASUK (IN)' : '- KELUAR (OUT)' }}
-                                </span>
-                                <span class="text-[10px] font-mono text-stone-400">{{ $mov->created_at->format('d/m H:i') }}</span>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-stone-900 leading-snug">{{ $mov->product->name ?? 'Produk Dihapus' }}</h4>
-                                <div class="text-[11px] font-mono text-stone-400 mt-0.5">
-                                    Vol: <span class="font-bold {{ $isIncoming ? 'text-emerald-700' : 'text-stone-800' }}">{{ $isIncoming ? '+' : '-' }}{{ number_format($mov->quantity) }} unit</span>
+                        @php
+                            $isIncoming = ($mov->type === 'IN');
+                            $operatorName = $mov->user->profile->full_name ?? $mov->user->username ?? 'Sistem';
+                        @endphp
+                        <div class="bg-white rounded-2xl p-5 border border-black/[0.05] shadow-2xs hover:shadow-sm transition-all flex flex-col justify-between group space-y-3">
+                            <div class="space-y-3">
+                                <div class="flex items-start justify-between gap-2">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-mono font-bold {{ $isIncoming ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-800' }}">
+                                        {{ $isIncoming ? '+ MASUK (IN)' : '- KELUAR (OUT)' }}
+                                    </span>
+                                    <span class="text-[10px] font-mono text-stone-500">
+                                        {{ $mov->created_at->format('d/m H:i') }}
+                                    </span>
+                                </div>
+
+                                <div>
+                                    @if($mov->product)
+                                        <a href="{{ route('products.show', $mov->product) }}" class="font-bold text-stone-900 group-hover:text-black transition-colors block text-base leading-snug">
+                                            {{ $mov->product->name }}
+                                        </a>
+                                        <div class="text-xs text-stone-400 mt-1 flex items-center gap-1.5">
+                                            <span>{{ $mov->product->category->name ?? 'Tanpa Kategori' }}</span>
+                                        </div>
+                                    @else
+                                        <span class="font-bold text-stone-900 block text-base leading-snug">Produk Dihapus</span>
+                                        <div class="text-xs text-stone-400 mt-1 flex items-center gap-1.5">
+                                            <span>Tanpa Kategori</span>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="pt-3 border-t border-stone-100 grid grid-cols-2 gap-2 text-xs">
+                                    <div>
+                                        <div class="text-[10px] font-mono uppercase text-stone-400">Volume Mutasi</div>
+                                        <div class="font-mono font-bold mt-0.5 {{ $isIncoming ? 'text-emerald-700' : 'text-stone-900' }}">
+                                            {{ $isIncoming ? '+' : '-' }}{{ number_format($mov->quantity) }} unit
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-[10px] font-mono uppercase text-stone-400">Operator</div>
+                                        <div class="font-mono font-bold text-stone-800 mt-0.5 truncate" title="{{ $operatorName }}">
+                                            {{ $operatorName }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
-                                <span>Oleh: {{ $mov->user->profile->full_name ?? $mov->user->username ?? 'Sistem' }}</span>
-                                <span class="truncate max-w-[100px] text-stone-400 font-mono">{{ $mov->note ?? '-' }}</span>
+
+                            <div class="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                                @if($mov->product)
+                                    <a href="{{ route('products.show', $mov->product) }}" class="text-xs font-semibold text-stone-700 hover:text-black">
+                                        Detail &rarr;
+                                    </a>
+                                @else
+                                    <a href="{{ route('stock.index') }}" class="text-xs font-semibold text-stone-700 hover:text-black">
+                                        Detail &rarr;
+                                    </a>
+                                @endif
+
+                                <span class="text-[11px] font-mono text-stone-400 truncate max-w-[120px]" title="{{ $mov->note ?? '-' }}">
+                                    {{ $mov->note ? $mov->note : '-' }}
+                                </span>
                             </div>
                         </div>
                     @empty
